@@ -17,6 +17,7 @@ export const getOrdenes = async (req, res) => {
       params.push(id_restaurante);
       query += ` AND m.id_restaurante = $${params.length}`;
     }
+    
     if (fecha) {
       params.push(fecha);
       query += ` AND DATE(o.fecha_hora) = $${params.length}`;
