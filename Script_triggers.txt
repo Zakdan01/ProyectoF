@@ -1,0 +1,315 @@
+-- =====================================================
+-- TABLAS LOG
+-- =====================================================
+
+CREATE TABLE restaurante.log_usuarios (
+    id_log INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    id_usuario INTEGER,
+    tipo_evento VARCHAR(10) NOT NULL,
+    fecha_evento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    datos_anteriores JSONB,
+    datos_nuevos JSONB
+);
+
+CREATE TABLE restaurante.log_restaurantes (
+    id_log INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    id_restaurante INTEGER,
+    tipo_evento VARCHAR(10) NOT NULL,
+    fecha_evento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    datos_anteriores JSONB,
+    datos_nuevos JSONB
+);
+
+CREATE TABLE restaurante.log_platillos (
+    id_log INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    id_platillo INTEGER,
+    tipo_evento VARCHAR(10) NOT NULL,
+    fecha_evento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    datos_anteriores JSONB,
+    datos_nuevos JSONB
+);
+
+-- =====================================================
+-- FUNCION LOG USUARIOS
+-- =====================================================
+
+CREATE OR REPLACE FUNCTION restaurante.fn_log_usuarios()
+RETURNS TRIGGER AS
+$$
+BEGIN
+
+    -- INSERT
+    IF TG_OP = 'INSERT' THEN
+        INSERT INTO restaurante.log_usuarios (
+            id_usuario,
+            tipo_evento,
+            datos_anteriores,
+            datos_nuevos
+        )
+        VALUES (
+            NEW.id_usuario,
+            TG_OP,
+            NULL,
+            to_jsonb(NEW)
+        );
+
+        RETURN NEW;
+    END IF;
+
+    -- UPDATE
+    IF TG_OP = 'UPDATE' THEN
+        INSERT INTO restaurante.log_usuarios (
+            id_usuario,
+            tipo_evento,
+            datos_anteriores,
+            datos_nuevos
+        )
+        VALUES (
+            NEW.id_usuario,
+            TG_OP,
+            to_jsonb(OLD),
+            to_jsonb(NEW)
+        );
+
+        RETURN NEW;
+    END IF;
+
+    -- DELETE
+    IF TG_OP = 'DELETE' THEN
+        INSERT INTO restaurante.log_usuarios (
+            id_usuario,
+            tipo_evento,
+            datos_anteriores,
+            datos_nuevos
+        )
+        VALUES (
+            OLD.id_usuario,
+            TG_OP,
+            to_jsonb(OLD),
+            NULL
+        );
+
+        RETURN OLD;
+    END IF;
+
+    RETURN NULL;
+
+END;
+$$ LANGUAGE plpgsql;
+
+-- =====================================================
+-- FUNCION LOG RESTAURANTES
+-- =====================================================
+
+CREATE OR REPLACE FUNCTION restaurante.fn_log_restaurantes()
+RETURNS TRIGGER AS
+$$
+BEGIN
+
+    -- INSERT
+    IF TG_OP = 'INSERT' THEN
+        INSERT INTO restaurante.log_restaurantes (
+            id_restaurante,
+            tipo_evento,
+            datos_anteriores,
+            datos_nuevos
+        )
+        VALUES (
+            NEW.id_restaurante,
+            TG_OP,
+            NULL,
+            to_jsonb(NEW)
+        );
+
+        RETURN NEW;
+    END IF;
+
+    -- UPDATE
+    IF TG_OP = 'UPDATE' THEN
+        INSERT INTO restaurante.log_restaurantes (
+            id_restaurante,
+            tipo_evento,
+            datos_anteriores,
+            datos_nuevos
+        )
+        VALUES (
+            NEW.id_restaurante,
+            TG_OP,
+            to_jsonb(OLD),
+            to_jsonb(NEW)
+        );
+
+        RETURN NEW;
+    END IF;
+
+    -- DELETE
+    IF TG_OP = 'DELETE' THEN
+        INSERT INTO restaurante.log_restaurantes (
+            id_restaurante,
+            tipo_evento,
+            datos_anteriores,
+            datos_nuevos
+        )
+        VALUES (
+            OLD.id_restaurante,
+            TG_OP,
+            to_jsonb(OLD),
+            NULL
+        );
+
+        RETURN OLD;
+    END IF;
+
+    RETURN NULL;
+
+END;
+$$ LANGUAGE plpgsql;
+
+-- =====================================================
+-- FUNCION LOG PLATILLOS
+-- =====================================================
+
+CREATE OR REPLACE FUNCTION restaurante.fn_log_platillos()
+RETURNS TRIGGER AS
+$$
+BEGIN
+
+    -- INSERT
+    IF TG_OP = 'INSERT' THEN
+        INSERT INTO restaurante.log_platillos (
+            id_platillo,
+            tipo_evento,
+            datos_anteriores,
+            datos_nuevos
+        )
+        VALUES (
+            NEW.id_platillo,
+            TG_OP,
+            NULL,
+            to_jsonb(NEW)
+        );
+
+        RETURN NEW;
+    END IF;
+
+    -- UPDATE
+    IF TG_OP = 'UPDATE' THEN
+        INSERT INTO restaurante.log_platillos (
+            id_platillo,
+            tipo_evento,
+            datos_anteriores,
+            datos_nuevos
+        )
+        VALUES (
+            NEW.id_platillo,
+            TG_OP,
+            to_jsonb(OLD),
+            to_jsonb(NEW)
+        );
+
+        RETURN NEW;
+    END IF;
+
+    -- DELETE
+    IF TG_OP = 'DELETE' THEN
+        INSERT INTO restaurante.log_platillos (
+            id_platillo,
+            tipo_evento,
+            datos_anteriores,
+            datos_nuevos
+        )
+        VALUES (
+            OLD.id_platillo,
+            TG_OP,
+            to_jsonb(OLD),
+            NULL
+        );
+
+        RETURN OLD;
+    END IF;
+
+    RETURN NULL;
+
+END;
+$$ LANGUAGE plpgsql;
+
+-- =====================================================
+-- TRIGGERS
+-- =====================================================
+
+CREATE TRIGGER trg_log_usuarios
+AFTER INSERT OR UPDATE OR DELETE
+ON restaurante.Usuario
+FOR EACH ROW
+EXECUTE FUNCTION restaurante.fn_log_usuarios();
+
+CREATE TRIGGER trg_log_restaurantes
+AFTER INSERT OR UPDATE OR DELETE
+ON restaurante.Restaurante
+FOR EACH ROW
+EXECUTE FUNCTION restaurante.fn_log_restaurantes();
+
+CREATE TRIGGER trg_log_platillos
+AFTER INSERT OR UPDATE OR DELETE
+ON restaurante.Platillo
+FOR EACH ROW
+EXECUTE FUNCTION restaurante.fn_log_platillos();
+
+-- =====================================================
+-- Prueba Usuarios
+-- =====================================================
+INSERT INTO restaurante.Usuario (nombre, apellido_pat, apellido_mat, ci, telefono, correo, contrasena, estado, id_rol, id_restaurante)
+VALUES ( 'Carlos', 'Perez', 'Lopez', '1234567', '77777777', 'carlos@gmail.com', '12345', 'Activo', 1, 1);
+
+UPDATE restaurante.Usuario
+SET
+    telefono = '78999999',
+    estado = 'Inactivo'
+WHERE id_usuario = 6;
+
+DELETE FROM restaurante.Usuario
+WHERE id_usuario = 6;
+
+SELECT * FROM restaurante.log_usuarios
+ORDER BY id_log;
+
+-- =====================================================
+-- Prueba Restaurante
+-- =====================================================
+
+INSERT INTO restaurante.Restaurante (nombre, direccion, telefono, ciudad, estado, hora_apertura, hora_cierre)
+VALUES ( 'Sabor Boliviano', 'Av. Siempre Viva', '22223333', 'La Paz', 'Activo', '08:00', '22:00');
+
+UPDATE restaurante.Restaurante
+SET
+    telefono = '76543210',
+    estado = 'Remodelacion'
+WHERE id_restaurante = 3;
+
+DELETE FROM restaurante.Restaurante
+WHERE id_restaurante = 3;
+
+SELECT * FROM restaurante.log_restaurantes
+ORDER BY id_log;
+
+-- =====================================================
+-- Prueba Platillos
+-- =====================================================
+
+INSERT INTO restaurante.Platillo (nombre_platillo, descripcion, precio, disponibilidad)
+VALUES ('Silpancho', 'Plato tradicional boliviano', 35.50, 'Disponible');
+
+UPDATE restaurante.Platillo
+SET
+    precio = 40.00,
+    disponibilidad = 'No disponible'
+WHERE id_platillo = 11;
+
+DELETE FROM restaurante.Platillo
+WHERE id_platillo = 11;
+
+SELECT * FROM restaurante.log_platillos
+ORDER BY id_log;

@@ -1,0 +1,224 @@
+-- =====================================================
+-- CREACION DE BASE DE DATOS
+-- =====================================================
+
+CREATE DATABASE restaurante_db
+WITH
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    CONNECTION LIMIT = -1
+    IS_TEMPLATE = FALSE;
+
+-- =====================================================
+-- CREACION DEL SCHEMA
+-- =====================================================
+
+CREATE SCHEMA restaurante;
+
+SET search_path TO restaurante;
+
+-- =====================================================
+-- TABLA ROL
+-- =====================================================
+
+CREATE TABLE restaurante.Rol (
+    id_rol INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre VARCHAR(20) NOT NULL,
+    descripcion VARCHAR(50)
+);
+
+-- =====================================================
+-- TABLA RESTAURANTE
+-- =====================================================
+
+CREATE TABLE restaurante.Restaurante (
+    id_restaurante INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL,
+    direccion VARCHAR(100),
+    telefono VARCHAR(20),
+    ciudad VARCHAR(30),
+    estado VARCHAR(20),
+    hora_apertura TIME,
+    hora_cierre TIME
+);
+
+-- =====================================================
+-- TABLA CLIENTE
+-- =====================================================
+
+CREATE TABLE restaurante.Cliente (
+    id_cliente INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombres VARCHAR(50) NOT NULL,
+    apellidos VARCHAR(50) NOT NULL,
+    ci VARCHAR(20) UNIQUE,
+    fecha_registro DATE DEFAULT CURRENT_DATE
+);
+
+-- =====================================================
+-- TABLA USUARIO
+-- =====================================================
+
+CREATE TABLE restaurante.Usuario (
+    id_usuario INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL,
+    apellido_pat VARCHAR(30),
+    apellido_mat VARCHAR(30),
+    ci VARCHAR(20) UNIQUE,
+    telefono VARCHAR(20),
+    correo VARCHAR(50) UNIQUE,
+    contrasena VARCHAR(100) NOT NULL,
+    estado VARCHAR(20),
+    fecha_registro DATE DEFAULT CURRENT_DATE,
+    id_rol INTEGER NOT NULL,
+    id_restaurante INTEGER NOT NULL,
+    CONSTRAINT fk_usuario_rol
+        FOREIGN KEY (id_rol)
+        REFERENCES restaurante.Rol(id_rol),
+    CONSTRAINT fk_usuario_restaurante
+        FOREIGN KEY (id_restaurante)
+        REFERENCES restaurante.Restaurante(id_restaurante)
+);
+
+-- =====================================================
+-- TABLA MESA
+-- =====================================================
+
+CREATE TABLE restaurante.Mesa (
+    id_mesa INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    n_mesa VARCHAR(10) NOT NULL,
+    capacidad INTEGER NOT NULL,
+    estado VARCHAR(20),
+    id_restaurante INTEGER NOT NULL,
+    CONSTRAINT fk_mesa_restaurante
+        FOREIGN KEY (id_restaurante)
+        REFERENCES restaurante.Restaurante(id_restaurante)
+);
+
+-- =====================================================
+-- TABLA ORDEN
+-- =====================================================
+
+CREATE TABLE restaurante.Orden (
+    id_orden INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    fecha_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    estado VARCHAR(30),
+    total NUMERIC(10,2),
+    id_cajero INTEGER NOT NULL,
+    id_cliente INTEGER NOT NULL,
+    id_mesero INTEGER NOT NULL,
+    id_mesa INTEGER NOT NULL,
+    CONSTRAINT fk_orden_cajero
+        FOREIGN KEY (id_cajero)
+        REFERENCES restaurante.Usuario(id_usuario),
+    CONSTRAINT fk_orden_cliente
+        FOREIGN KEY (id_cliente)
+        REFERENCES restaurante.Cliente(id_cliente),
+    CONSTRAINT fk_orden_mesero
+        FOREIGN KEY (id_mesero)
+        REFERENCES restaurante.Usuario(id_usuario),
+    CONSTRAINT fk_orden_mesa
+        FOREIGN KEY (id_mesa)
+        REFERENCES restaurante.Mesa(id_mesa)
+);
+
+-- =====================================================
+-- TABLA PAGO
+-- =====================================================
+
+CREATE TABLE restaurante.Pago (
+    id_pago INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    fecha_pago TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    monto_pago NUMERIC(10,2) NOT NULL,
+    id_orden INTEGER NOT NULL,
+    CONSTRAINT fk_pago_orden
+        FOREIGN KEY (id_orden)
+        REFERENCES restaurante.Orden(id_orden)
+);
+
+-- =====================================================
+-- TABLA PLATILLO
+-- =====================================================
+
+CREATE TABLE restaurante.Platillo (
+    id_platillo INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre_platillo VARCHAR(50) NOT NULL,
+    descripcion VARCHAR(100),
+    precio NUMERIC(10,2) NOT NULL,
+    disponibilidad VARCHAR(20)
+);
+
+-- =====================================================
+-- TABLA INGREDIENTE
+-- =====================================================
+
+CREATE TABLE restaurante.Ingrediente (
+    id_ingrediente INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre_ingrediente VARCHAR(50) NOT NULL,
+    descripcion VARCHAR(100),
+    stock_actual NUMERIC(10,2),
+    unidad_medida VARCHAR(20),
+    estado VARCHAR(20)
+);
+
+-- =====================================================
+-- TABLA PROVEEDOR
+-- =====================================================
+
+CREATE TABLE restaurante.Proveedor (
+    id_proveedor INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre_empresa VARCHAR(50) NOT NULL,
+    nombre_contacto VARCHAR(50),
+    telefono VARCHAR(20),
+    correo VARCHAR(50),
+    direccion VARCHAR(100)
+);
+
+-- =====================================================
+-- TABLA ORDEN_PLATILLO
+-- =====================================================
+
+CREATE TABLE restaurante.Orden_Platillo (
+    id_orden_platillo INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    id_orden INTEGER NOT NULL,
+    id_platillo INTEGER NOT NULL,
+    cantidad INTEGER NOT NULL,
+    subtotal NUMERIC(10,2) NOT NULL,
+    CONSTRAINT fk_op_orden
+        FOREIGN KEY (id_orden)
+        REFERENCES restaurante.Orden(id_orden),
+    CONSTRAINT fk_op_platillo
+        FOREIGN KEY (id_platillo)
+        REFERENCES restaurante.Platillo(id_platillo)
+);
+
+-- =====================================================
+-- TABLA PLATILLO_INGREDIENTE
+-- =====================================================
+
+CREATE TABLE restaurante.Platillo_Ingrediente (
+    id_platillo INTEGER NOT NULL,
+    id_ingrediente INTEGER NOT NULL,
+    PRIMARY KEY (id_platillo, id_ingrediente),
+    CONSTRAINT fk_pi_platillo
+        FOREIGN KEY (id_platillo)
+        REFERENCES restaurante.Platillo(id_platillo),
+    CONSTRAINT fk_pi_ingrediente
+        FOREIGN KEY (id_ingrediente)
+        REFERENCES restaurante.Ingrediente(id_ingrediente)
+);
+
+-- =====================================================
+-- TABLA PROVEEDOR_INGREDIENTE
+-- =====================================================
+
+CREATE TABLE restaurante.Proveedor_Ingrediente (
+    id_proveedor_ingrediente INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    id_proveedor INTEGER NOT NULL,
+    id_ingrediente INTEGER NOT NULL,
+    CONSTRAINT fk_pri_proveedor
+        FOREIGN KEY (id_proveedor)
+        REFERENCES restaurante.Proveedor(id_proveedor),
+    CONSTRAINT fk_pri_ingrediente
+        FOREIGN KEY (id_ingrediente)
+        REFERENCES restaurante.Ingrediente(id_ingrediente)
+);
