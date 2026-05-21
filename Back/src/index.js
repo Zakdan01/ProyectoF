@@ -15,6 +15,9 @@ import ingredientRoutes from './routes/ingredientRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import clientRoutes from './routes/clientRoutes.js';
 import roleRoutes from './routes/roleRoutes.js';
+import supplyRoutes from './routes/supplyRoutes.js';
+import recipeRoutes from './routes/recipeRoutes.js';
+import statsRoutes from './routes/statsRoutes.js';
 
 dotenv.config();
 
@@ -41,6 +44,9 @@ app.use('/api/ingredientes', ingredientRoutes);
 app.use('/api/pagos', paymentRoutes);
 app.use('/api/clientes', clientRoutes);
 app.use('/api/roles', roleRoutes);
+app.use('/api/suministros', supplyRoutes);
+app.use('/api/recetas', recipeRoutes);
+app.use('/api/reportes', statsRoutes);
 
 // Servidor
 app.listen(PORT, () => {

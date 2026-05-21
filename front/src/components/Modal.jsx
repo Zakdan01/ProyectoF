@@ -1,21 +1,21 @@
 import React from 'react';
 
-const Modal = ({ isOpen, onClose, title, children }) => {
+const Modal = ({ isOpen, onClose, title, children, maxWidth = 'max-w-2xl' }) => {
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn">
-      <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden border border-gray-100 dark:border-gray-700">
+      <div className={`bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full ${maxWidth} overflow-hidden border border-gray-100 dark:border-gray-700 transition-all duration-300`}>
         <div className="flex justify-between items-center p-6 border-b border-gray-100 dark:border-gray-700">
-          <h3 className="text-2xl font-bold dark:text-white">{title}</h3>
+          <h3 className="text-2xl font-bold dark:text-white tracking-tight">{title}</h3>
           <button 
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-white transition text-2xl"
+            className="w-10 h-10 flex items-center justify-center rounded-xl text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-600 dark:hover:text-white transition-all"
           >
             ✕
           </button>
         </div>
-        <div className="p-6 max-h-[70vh] overflow-y-auto">
+        <div className="p-8 max-h-[85vh] overflow-y-auto custom-scrollbar">
           {children}
         </div>
       </div>

@@ -10,6 +10,9 @@ import ClientsSection from '../components/admin/ClientsSection';
 import PaymentsSection from '../components/admin/PaymentsSection';
 import IngredientsSection from '../components/admin/IngredientsSection';
 import ProvidersSection from '../components/admin/ProvidersSection';
+import SupplyManagementSection from '../components/admin/SupplyManagementSection';
+import RecipeManagementSection from '../components/admin/RecipeManagementSection';
+import StatsSection from '../components/admin/StatsSection';
 import AuditSection from '../components/admin/AuditSection';
 import AllOrdersSection from '../components/admin/AllOrdersSection';
 import OrdersSection from '../components/admin/OrdersSection';
@@ -30,20 +33,22 @@ const AdminDashboard = () => {
     { id: 'restaurants', label: 'Restaurantes', icon: '🏢' },
     { id: 'tables', label: 'Mesas', icon: '🪑' },
     { id: 'dishes', label: 'Platillos', icon: '🍽️' },
+    { id: 'recipes', label: 'Recetas', icon: '📖' },
     { id: 'clients', label: 'Clientes', icon: '👤' },
     { id: 'orders', label: 'Órdenes', icon: '💰' },
-    { id: 'all-orders', label: 'Todas las Órdenes', icon: '📋' },
     { id: 'payments', label: 'Pagos', icon: '💳' },
+    { id: 'all-orders', label: 'Todas las Órdenes', icon: '📋' },
+    { id: 'stats', label: 'Análisis de Ventas', icon: '📊' },
     { id: 'kitchen', label: 'Cocina', icon: '👨‍🍳' },
     { id: 'waiter', label: 'Meseros', icon: '🏃' },
     { id: 'ingredients', label: 'Inventario', icon: '📦' },
     { id: 'providers', label: 'Proveedores', icon: '🚚' },
+    { id: 'supplies', label: 'Suministros', icon: '🤝' },
     { id: 'audit', label: 'Auditoría', icon: '🛡️' },
   ];
 
   return (
     <div className="flex min-h-[calc(100vh-80px)] bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
-      {/* Sidebar */}
       <aside className="w-64 bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 flex-shrink-0 hidden lg:block sticky top-20 h-[calc(100vh-80px)] overflow-y-auto">
         <div className="p-6">
           <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">Operaciones Reales</p>
@@ -62,7 +67,6 @@ const AdminDashboard = () => {
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-grow p-8 max-w-[1600px] mx-auto">
         <header className="mb-10">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -91,11 +95,14 @@ const AdminDashboard = () => {
           {activeTab === 'clients' && <ClientsSection />}
           {activeTab === 'orders' && <OrdersSection />}
           {activeTab === 'all-orders' && <AllOrdersSection />}
+          {activeTab === 'stats' && <StatsSection />}
           {activeTab === 'payments' && <PaymentsSection />}
           {activeTab === 'kitchen' && <KitchenSection />}
           {activeTab === 'waiter' && <WaiterSection />}
           {activeTab === 'ingredients' && <IngredientsSection />}
           {activeTab === 'providers' && <ProvidersSection />}
+          {activeTab === 'supplies' && <SupplyManagementSection />}
+          {activeTab === 'recipes' && <RecipeManagementSection />}
           {activeTab === 'audit' && <AuditSection />}
         </div>
       </main>
