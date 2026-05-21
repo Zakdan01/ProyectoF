@@ -6,9 +6,10 @@ export const login = async (req, res) => {
   const { correo, contrasena } = req.body;
   try {
     const result = await pool.query(
-      `SELECT u.*, r.nombre as rol_nombre 
+      `SELECT u.*, r.nombre as rol_nombre, res.nombre as restaurante_nombre
        FROM restaurante.Usuario u 
        JOIN restaurante.Rol r ON u.id_rol = r.id_rol 
+       JOIN restaurante.Restaurante res ON u.id_restaurante = res.id_restaurante
        WHERE u.correo = $1`,
       [correo]
     );

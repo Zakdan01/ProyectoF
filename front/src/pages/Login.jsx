@@ -27,13 +27,10 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        // Mapeamos los datos que vienen del back (nombre, rol_nombre, etc)
+        // Guardamos el objeto de usuario completo del back para que esté disponible en toda la app
         const userData = {
-          nombre: `${data.user.nombre} ${data.user.apellido_pat || ''}`,
-          rol: data.user.rol_nombre,
-          rol_nombre: data.user.rol_nombre,
-          id_usuario: data.user.id_usuario,
-          id_restaurante: data.user.id_restaurante
+          ...data.user,
+          rol: data.user.rol_nombre // Mantenemos compatibilidad con el campo 'rol'
         };
         
         login(userData);

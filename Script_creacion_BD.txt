@@ -99,26 +99,26 @@ CREATE TABLE restaurante.Mesa (
 -- =====================================================
 
 CREATE TABLE restaurante.Orden (
-    id_orden INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    fecha_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    estado VARCHAR(30),
-    total NUMERIC(10,2),
-    id_cajero INTEGER NOT NULL,
-    id_cliente INTEGER NOT NULL,
-    id_mesero INTEGER NOT NULL,
-    id_mesa INTEGER NOT NULL,
-    CONSTRAINT fk_orden_cajero
-        FOREIGN KEY (id_cajero)
-        REFERENCES restaurante.Usuario(id_usuario),
-    CONSTRAINT fk_orden_cliente
-        FOREIGN KEY (id_cliente)
-        REFERENCES restaurante.Cliente(id_cliente),
-    CONSTRAINT fk_orden_mesero
-        FOREIGN KEY (id_mesero)
-        REFERENCES restaurante.Usuario(id_usuario),
-    CONSTRAINT fk_orden_mesa
-        FOREIGN KEY (id_mesa)
-        REFERENCES restaurante.Mesa(id_mesa)
+     id_orden INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+     fecha_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     estado VARCHAR(30),
+     total NUMERIC(10,2),
+     id_cajero INTEGER NOT NULL, 
+     id_cliente INTEGER,         
+     id_mesero INTEGER,          
+     id_mesa INTEGER,            
+     CONSTRAINT fk_orden_cajero
+         FOREIGN KEY (id_cajero)
+         REFERENCES restaurante.Usuario(id_usuario),
+     CONSTRAINT fk_orden_cliente
+         FOREIGN KEY (id_cliente)
+         REFERENCES restaurante.Cliente(id_cliente),
+     CONSTRAINT fk_orden_mesero
+         FOREIGN KEY (id_mesero)
+         REFERENCES restaurante.Usuario(id_usuario),
+     CONSTRAINT fk_orden_mesa
+         FOREIGN KEY (id_mesa)
+         REFERENCES restaurante.Mesa(id_mesa)
 );
 
 -- =====================================================

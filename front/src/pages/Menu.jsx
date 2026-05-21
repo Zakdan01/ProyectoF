@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from 'react';
 
 const MenuItem = ({ name, price, desc, img }) => (
-  <div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 border border-gray-100 dark:border-gray-700 group">
-    <div className="h-48 overflow-hidden">
-      <img src={img} alt={name} className="w-full h-full object-cover group-hover:scale-110 transition duration-500" />
-    </div>
-    <div className="p-6">
-      <div className="flex justify-between items-start mb-2">
-        <h5 className="font-bold text-lg text-gray-800 dark:text-white">{name}</h5>
-        <span className="text-orange-600 font-bold">{price}</span>
+  <div className="bg-white dark:bg-gray-800 rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-gray-700 group flex flex-col h-full">
+    <div className="h-80 overflow-hidden relative">
+      <img src={img} alt={name} className="w-full h-full object-cover group-hover:scale-110 transition duration-700" />
+      <div className="absolute top-6 right-6 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md px-4 py-2 rounded-2xl shadow-xl">
+        <span className="text-orange-600 font-black text-xl">Bs. {price}</span>
       </div>
-      <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{desc}</p>
-      <button className="mt-4 w-full py-2 border border-orange-600 text-orange-600 rounded-lg font-bold hover:bg-orange-600 hover:text-white transition duration-300">
-        Pedir ahora
-      </button>
+    </div>
+    <div className="p-10 flex-grow flex flex-col justify-center text-center">
+      <h5 className="font-black text-3xl text-gray-900 dark:text-white mb-4 tracking-tight leading-tight group-hover:text-orange-600 transition-colors">{name}</h5>
+      <div className="w-12 h-1 bg-orange-200 dark:bg-gray-700 mx-auto mb-6 rounded-full group-hover:w-24 group-hover:bg-orange-500 transition-all duration-500"></div>
+      <p className="text-gray-500 dark:text-gray-400 text-lg leading-relaxed italic">"{desc || 'Nuestra especialidad de la casa, preparada con los ingredientes más frescos.'}"</p>
     </div>
   </div>
 );
@@ -49,34 +47,32 @@ const Menu = () => {
   }, []);
 
   return (
-    <div className="py-24 px-8 max-w-7xl mx-auto min-h-screen">
-      <div className="text-center mb-16">
-        <h3 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Nuestra Selección Especial</h3>
-        <div className="w-20 h-1.5 bg-orange-600 mx-auto rounded-full mb-6"></div>
-        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg">
-          Explora nuestra carta dinámica, sincronizada directamente con nuestra cocina real.
-        </p>
+    <div className="py-24 px-6 max-w-7xl mx-auto min-h-screen animate-fadeIn">
+      <div className="text-center mb-24">
+        <p className="text-orange-600 font-black text-sm uppercase tracking-[0.4em] mb-4">Experiencia Gastronómica</p>
+        <h3 className="text-6xl font-black text-gray-900 dark:text-white mb-6 tracking-tighter">Nuestra Carta</h3>
+        <div className="w-24 h-2 bg-orange-600 mx-auto rounded-full"></div>
       </div>
       
       {loading ? (
-        <div className="flex flex-col justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mb-4"></div>
-          <p className="text-gray-500 dark:text-gray-400">Cargando platillos desde la base de datos...</p>
+        <div className="flex flex-col justify-center items-center h-96">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-orange-600 border-t-transparent mb-6"></div>
+          <p className="text-gray-400 font-bold uppercase tracking-widest text-sm animate-pulse">Cargando Manjares...</p>
         </div>
       ) : error ? (
-        <div className="text-center py-20">
-          <p className="text-red-500 text-xl font-bold">⚠️ Error: {error}</p>
-          <p className="text-gray-500 mt-2">Asegúrate de que el servidor backend esté corriendo.</p>
+        <div className="text-center py-20 bg-red-50 dark:bg-red-900/10 rounded-[3rem] border border-red-100 dark:border-red-900/30">
+          <p className="text-red-500 text-2xl font-black mb-2">⚠️ Error de Conexión</p>
+          <p className="text-gray-500 dark:text-gray-400">No pudimos conectar con la cocina central.</p>
         </div>
       ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 gap-12">
           {dishes.map((dish) => (
             <MenuItem 
               key={dish.id_platillo}
               name={dish.nombre_platillo}
-              price={`$${dish.precio}`}
+              price={dish.precio}
               desc={dish.descripcion}
-              img={dish.imagen_url || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80"}
+              img={dish.imagen_url || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80"}
             />
           ))}
         </div>
