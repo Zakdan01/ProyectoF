@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
 
@@ -7,6 +7,10 @@ const Navbar = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setShowProfileMenu(false);
+  }, [location.pathname, user]);
 
   const handleLogout = () => {
     logout();
@@ -69,13 +73,13 @@ const Navbar = () => {
                   >
                     Ver Perfil
                   </Link>
-                  {user.rol === 'Administrador' && (
+                  {['Administrador', 'Cajero', 'Cocinero', 'Mesero'].includes(user.rol_nombre) && (
                     <Link 
                       to="/admin" 
                       className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-orange-50 dark:hover:bg-gray-700 transition"
                       onClick={() => setShowProfileMenu(false)}
                     >
-                      Panel Admin
+                      Panel Operativo
                     </Link>
                   )}
                   <button 

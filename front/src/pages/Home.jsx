@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useAppContext } from '../context/AppContext';
 
 const TeamMember = ({ name, role, img }) => (
   <div className="text-center group">
@@ -12,6 +13,8 @@ const TeamMember = ({ name, role, img }) => (
 );
 
 const Home = () => {
+  const { user } = useAppContext();
+
   return (
     <div>
       {/* Welcome / Hero Section */}
@@ -26,9 +29,15 @@ const Home = () => {
               Accede a la plataforma de gestión del Restaurante Gourmet para administrar pedidos, reservas y la experiencia de tus clientes de forma centralizada.
             </p>
             <div>
-              <Link to="/login" className="inline-block bg-orange-600 text-white font-black py-5 px-14 rounded-2xl text-2xl hover:bg-orange-700 transition shadow-2xl transform hover:-translate-y-1 active:scale-95">
-                INICIAR SESIÓN AHORA
-              </Link>
+              {user ? (
+                <Link to="/admin" className="inline-block bg-orange-600 text-white font-black py-5 px-14 rounded-2xl text-2xl hover:bg-orange-700 transition shadow-2xl transform hover:-translate-y-1 active:scale-95">
+                  ADMINISTRAR
+                </Link>
+              ) : (
+                <Link to="/login" className="inline-block bg-orange-600 text-white font-black py-5 px-14 rounded-2xl text-2xl hover:bg-orange-700 transition shadow-2xl transform hover:-translate-y-1 active:scale-95">
+                  INICIAR SESIÓN AHORA
+                </Link>
+              )}
             </div>
           </div>
           <div className="relative h-[550px] rounded-[2.5rem] overflow-hidden shadow-2xl border-8 border-white dark:border-gray-800">

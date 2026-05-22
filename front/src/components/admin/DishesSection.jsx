@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Modal from '../../components/Modal';
+import { useAppContext } from '../../context/AppContext';
 
 const DishesSection = () => {
+  const { user } = useAppContext();
   const [dishes, setDishes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -102,7 +104,9 @@ const DishesSection = () => {
     <div className="space-y-6 animate-fadeIn">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <h3 className="text-2xl font-bold dark:text-white">Control de Platillos</h3>
-        <button onClick={() => handleOpenModal()} className="bg-orange-600 text-white px-6 py-2 rounded-xl font-bold hover:bg-orange-700 transition shadow-lg shadow-orange-600/20">+ Nuevo Platillo</button>
+        {user?.rol_nombre !== 'Mesero' && (
+          <button onClick={() => handleOpenModal()} className="bg-orange-600 text-white px-6 py-2 rounded-xl font-bold hover:bg-orange-700 transition shadow-lg shadow-orange-600/20">+ Nuevo Platillo</button>
+        )}
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
@@ -149,12 +153,18 @@ const DishesSection = () => {
               </div>
               <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 italic">"{d.descripcion || 'Sin descripción'}"</p>
               <div className="flex justify-between items-center mt-auto pt-4 border-t border-gray-50 dark:border-gray-700">
-                <button onClick={() => handleOpenModal(d)} className="flex items-center gap-1 text-blue-600 text-xs font-bold hover:bg-blue-50 dark:hover:bg-blue-900/20 px-3 py-2 rounded-lg transition">
-                  <span>✏️</span> Editar
-                </button>
-                <button onClick={() => handleDelete(d.id_platillo)} className="flex items-center gap-1 text-red-600 text-xs font-bold hover:bg-red-50 dark:hover:bg-red-900/20 px-3 py-2 rounded-lg transition">
-                  <span>🗑️</span> Eliminar
-                </button>
+                {user?.rol_nombre !== 'Mesero' ? (
+                  <>
+                    <button onClick={() => handleOpenModal(d)} className="flex items-center gap-1 text-blue-600 text-xs font-bold hover:bg-blue-50 dark:hover:bg-blue-900/20 px-3 py-2 rounded-lg transition">
+                      <span>✏️</span> Editar
+                    </button>
+                    <button onClick={() => handleDelete(d.id_platillo)} className="flex items-center gap-1 text-red-600 text-xs font-bold hover:bg-red-50 dark:hover:bg-red-900/20 px-3 py-2 rounded-lg transition">
+                      <span>🗑️</span> Eliminar
+                    </button>
+                  </>
+                ) : (
+                  <span className="text-[10px] font-bold text-gray-400 uppercase italic">Modo Lectura (Solo Mesero)</span>
+                )}
               </div>
             </div>
           </div>

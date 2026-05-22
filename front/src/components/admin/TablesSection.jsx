@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Modal from '../../components/Modal';
+import { useAppContext } from '../../context/AppContext';
 
 const TablesSection = () => {
+  const { user } = useAppContext();
   const [tables, setTables] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
   const [selectedRestaurante, setSelectedRestaurante] = useState('');
   const [loading, setLoading] = useState(true);
+  const [sortBy, setSortBy] = useState('numero_asc');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     n_mesa: '',
@@ -46,6 +49,14 @@ const TablesSection = () => {
     setSelectedRestaurante(id);
     fetchTables(id);
   };
+
+  const sortedTables = [...tables].sort((a, b) => {
+    if (sortBy === 'numero_asc') return a.n_mesa.localeCompare(b.n_mesa, undefined, { numeric: true });
+    if (sortBy === 'numero_desc') return b.n_mesa.localeCompare(a.n_mesa, undefined, { numeric: true });
+    if (sortBy === 'capacidad_asc') return a.capacidad - b.capacidad;
+    if (sortBy === 'capacidad_desc') return b.capacidad - a.capacidad;
+    return 0;
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -94,24 +105,40 @@ const TablesSection = () => {
     <div className="space-y-6 animate-fadeIn">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <h3 className="text-2xl font-bold dark:text-white">Estado de Mesas</h3>
-        <div className="flex items-center space-x-3">
-          <div className="flex items-center space-x-2 bg-white dark:bg-gray-800 p-2 rounded-xl shadow-sm border dark:border-gray-700">
-            <label className="text-xs font-bold text-gray-400 uppercase whitespace-nowrap">Sucursal:</label>
-            <select 
-              className="p-1 bg-transparent dark:text-white outline-none"
-              value={selectedRestaurante}
-              onChange={handleRestauranteChange}
-            >
-              <option value="">Todas</option>
-              {restaurants.map(r => <option key={r.id_restaurante} value={r.id_restaurante}>{r.nombre}</option>)}
-            </select>
-          </div>
+        {user?.rol_nombre !== 'Mesero' && (
           <button 
             onClick={() => setIsModalOpen(true)}
-            className="bg-orange-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-orange-700 transition"
+            className="bg-orange-600 text-white px-6 py-2 rounded-xl font-bold hover:bg-orange-700 transition shadow-lg shadow-orange-600/20"
           >
             + Añadir Mesa
           </button>
+        )}
+      </div>
+
+      <div className="flex flex-wrap gap-4 bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
+        <div className="flex items-center gap-2">
+          <label className="text-xs font-bold text-gray-400 uppercase">Sucursal:</label>
+          <select 
+            className="bg-gray-50 dark:bg-gray-900 border dark:border-gray-700 p-2 rounded-xl dark:text-white text-sm outline-none focus:ring-2 focus:ring-orange-500/20"
+            value={selectedRestaurante}
+            onChange={handleRestauranteChange}
+          >
+            <option value="">Todas</option>
+            {restaurants.map(r => <option key={r.id_restaurante} value={r.id_restaurante}>{r.nombre}</option>)}
+          </select>
+        </div>
+        <div className="flex items-center gap-2">
+          <label className="text-xs font-bold text-gray-400 uppercase">Ordenar:</label>
+          <select 
+            className="bg-gray-50 dark:bg-gray-900 border dark:border-gray-700 p-2 rounded-xl dark:text-white text-sm outline-none focus:ring-2 focus:ring-orange-500/20"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+          >
+            <option value="numero_asc">Número (Menor-Mayor)</option>
+            <option value="numero_desc">Número (Mayor-Menor)</option>
+            <option value="capacidad_asc">Capacidad (Menor-Mayor)</option>
+            <option value="capacidad_desc">Capacidad (Mayor-Menor)</option>
+          </select>
         </div>
       </div>
 
@@ -120,7 +147,7 @@ const TablesSection = () => {
       ) : (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            {tables.map(t => (
+            {sortedTables.map(t => (
               <div key={t.id_mesa} className={`relative p-6 rounded-3xl border-2 transition-all shadow-md hover:shadow-lg ${
                 t.estado === 'Ocupada' ? 'border-red-100 bg-red-50/50 dark:bg-red-900/20' : 
                 t.estado === 'Reservada' ? 'border-amber-100 bg-amber-50/50 dark:bg-amber-900/20' :
@@ -130,15 +157,17 @@ const TablesSection = () => {
                   <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-2xl flex items-center justify-center shadow-sm border border-gray-100 dark:border-gray-700">
                     <span className="text-xl font-black dark:text-white">#{t.n_mesa}</span>
                   </div>
-                  <button 
-                    onClick={() => handleDelete(t.id_mesa)}
-                    className="p-2 bg-white dark:bg-gray-800 text-red-500 rounded-xl shadow-sm hover:bg-red-500 hover:text-white transition-all border border-red-50 dark:border-red-900/30"
-                    title="Eliminar mesa"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                  </button>
+                  {user?.rol_nombre !== 'Mesero' && (
+                    <button 
+                      onClick={() => handleDelete(t.id_mesa)}
+                      className="p-2 bg-white dark:bg-gray-800 text-red-500 rounded-xl shadow-sm hover:bg-red-500 hover:text-white transition-all border border-red-50 dark:border-red-900/30"
+                      title="Eliminar mesa"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
+                  )}
                 </div>
 
                 <div className="space-y-3">
@@ -166,7 +195,7 @@ const TablesSection = () => {
               </div>
             ))}
           </div>
-          {tables.length === 0 && (
+          {sortedTables.length === 0 && (
             <div className="p-20 text-center bg-white dark:bg-gray-800 rounded-2xl border border-dashed border-gray-200 dark:border-gray-700">
               <p className="text-gray-500">No hay mesas registradas en esta sucursal.</p>
             </div>

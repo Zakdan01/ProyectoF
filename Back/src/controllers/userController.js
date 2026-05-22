@@ -64,6 +64,40 @@ export const deleteUsuario = async (req, res) => {
   }
 };
 
+export const changePassword = async (req, res) => {
+  const { id } = req.params;
+  const { currentPassword, newPassword } = req.body;
+
+  try {
+    // 1. Obtener el usuario
+    const userResult = await pool.query('SELECT contrasena FROM restaurante.Usuario WHERE id_usuario = $1', [id]);
+    
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    const user = userResult.rows[0];
+
+    // 2. Verificar contraseña actual
+    const isMatch = await bcrypt.compare(currentPassword, user.contrasena);
+    if (!isMatch) {
+      return res.status(400).json({ error: 'La contraseña actual es incorrecta' });
+    }
+
+    // 3. Encriptar nueva contraseña
+    const salt = await bcrypt.genSalt(10);
+    const hashedNewPassword = await bcrypt.hash(newPassword, salt);
+
+    // 4. Actualizar en BD
+    await pool.query('UPDATE restaurante.Usuario SET contrasena = $1 WHERE id_usuario = $2', [hashedNewPassword, id]);
+
+    res.json({ success: true, message: 'Contraseña actualizada con éxito' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: 'Error al cambiar la contraseña' });
+  }
+};
+
 export const getRoles = async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM restaurante.Rol');

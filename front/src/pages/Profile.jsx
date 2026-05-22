@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useAppContext } from '../context/AppContext';
+import Modal from '../components/Modal';
 
 const Profile = () => {
   const { user, login } = useAppContext();
   const [isEditing, setIsEditing] = useState(false);
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
   
@@ -15,6 +17,14 @@ const Profile = () => {
     telefono: '',
     ci: '',
   });
+
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+
+  const [passwordError, setPasswordError] = useState('');
 
   // Sincronizar datos del formulario desde el backend para mayor seguridad
   useEffect(() => {
@@ -162,9 +172,22 @@ const Profile = () => {
                 </div>
               </div>
 
-              <div className="pt-8 border-t border-gray-50 dark:border-gray-700 mt-auto">
-                <p className="text-[10px] text-gray-400 font-bold uppercase mb-2">ID Interno de Sistema</p>
-                <code className="bg-gray-100 dark:bg-gray-900 px-3 py-1 rounded-lg text-orange-600 font-bold">USR-{user.id_usuario}</code>
+              <div className="pt-8 border-t border-gray-50 dark:border-gray-700 mt-auto flex flex-col gap-4">
+                <div>
+                  <p className="text-[10px] text-gray-400 font-bold uppercase mb-2">ID Interno de Sistema</p>
+                  <code className="bg-gray-100 dark:bg-gray-900 px-3 py-1 rounded-lg text-orange-600 font-bold">USR-{user.id_usuario}</code>
+                </div>
+
+                <button 
+                  onClick={() => {
+                    setIsPasswordModalOpen(true);
+                    setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+                    setPasswordError('');
+                  }}
+                  className="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-3 rounded-2xl text-xs font-black uppercase tracking-widest hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
+                >
+                  <span>🔐</span> Cambiar Contraseña
+                </button>
               </div>
             </div>
           </div>
@@ -296,6 +319,100 @@ const Profile = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal para Cambiar Contraseña */}
+      <Modal 
+        isOpen={isPasswordModalOpen} 
+        onClose={() => setIsPasswordModalOpen(false)} 
+        title="Cambiar Contraseña"
+      >
+        <form onSubmit={async (e) => {
+          e.preventDefault();
+          setPasswordError('');
+          
+          if (passwordData.newPassword !== passwordData.confirmPassword) {
+            setPasswordError('Las nuevas contraseñas no coinciden.');
+            return;
+          }
+
+          if (passwordData.newPassword.length < 6) {
+            setPasswordError('La nueva contraseña debe tener al menos 6 caracteres.');
+            return;
+          }
+
+          setLoading(true);
+          try {
+            const res = await fetch(`http://localhost:5000/api/usuarios/${user.id_usuario}/password`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                currentPassword: passwordData.currentPassword,
+                newPassword: passwordData.newPassword
+              })
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+              setIsPasswordModalOpen(false);
+              setMessage({ type: 'success', text: '¡Contraseña actualizada con éxito!' });
+            } else {
+              setPasswordError(data.error || 'Error al cambiar la contraseña.');
+            }
+          } catch (err) {
+            setPasswordError('Error de conexión con el servidor.');
+          } finally {
+            setLoading(false);
+          }
+        }} className="space-y-4">
+          {passwordError && (
+            <div className="p-3 bg-red-50 text-red-700 border border-red-200 rounded-xl text-xs font-bold">
+              ⚠️ {passwordError}
+            </div>
+          )}
+          
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-gray-400 uppercase ml-1">Contraseña Actual</label>
+            <input 
+              type="password"
+              required
+              className="w-full p-3 bg-gray-50 dark:bg-gray-900 border dark:border-gray-700 rounded-xl dark:text-white outline-none focus:ring-2 focus:ring-orange-500/20 transition-all"
+              value={passwordData.currentPassword}
+              onChange={(e) => setPasswordData({...passwordData, currentPassword: e.target.value})}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-gray-400 uppercase ml-1">Nueva Contraseña</label>
+            <input 
+              type="password"
+              required
+              className="w-full p-3 bg-gray-50 dark:bg-gray-900 border dark:border-gray-700 rounded-xl dark:text-white outline-none focus:ring-2 focus:ring-orange-500/20 transition-all"
+              value={passwordData.newPassword}
+              onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value})}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-gray-400 uppercase ml-1">Confirmar Nueva Contraseña</label>
+            <input 
+              type="password"
+              required
+              className="w-full p-3 bg-gray-50 dark:bg-gray-900 border dark:border-gray-700 rounded-xl dark:text-white outline-none focus:ring-2 focus:ring-orange-500/20 transition-all"
+              value={passwordData.confirmPassword}
+              onChange={(e) => setPasswordData({...passwordData, confirmPassword: e.target.value})}
+            />
+          </div>
+
+          <button 
+            type="submit"
+            disabled={loading}
+            className="w-full bg-orange-600 text-white font-black py-4 rounded-xl hover:bg-orange-700 transition shadow-lg shadow-orange-600/20 disabled:opacity-50 mt-4"
+          >
+            {loading ? 'ACTUALIZANDO...' : 'ACTUALIZAR CONTRASEÑA'}
+          </button>
+        </form>
+      </Modal>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUsuarios, getRoles, createUsuario, updateUsuario, deleteUsuario } from '../controllers/userController.js';
+import { getUsuarios, getRoles, createUsuario, updateUsuario, deleteUsuario, changePassword } from '../controllers/userController.js';
 
 const router = express.Router();
 
@@ -74,5 +74,23 @@ router.put('/:id', updateUsuario);
  *         description: Usuario eliminado
  */
 router.delete('/:id', deleteUsuario);
+
+/**
+ * @swagger
+ * /api/usuarios/{id}/password:
+ *   put:
+ *     summary: Cambiar contraseña de usuario
+ *     tags: [Usuarios]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Contraseña actualizada
+ */
+router.put('/:id/password', changePassword);
 
 export default router;
