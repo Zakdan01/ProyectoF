@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Modal from '../../components/Modal';
+import { useToast } from '../../context/ToastContext';
 
 const UsersSection = () => {
+  const { showToast } = useToast();
   const [users, setUsers] = useState([]);
   const [roles, setRoles] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
@@ -101,9 +103,16 @@ const UsersSection = () => {
       if (res.ok) {
         setIsModalOpen(false);
         fetchUsers();
+        showToast(
+          editingUser ? 'Usuario actualizado' : 'Usuario creado exitosamente',
+          editingUser ? 'update' : 'success'
+        );
+      } else {
+        showToast('Error al procesar la solicitud', 'error');
       }
     } catch (err) {
       console.error(err);
+      showToast('Error de conexión', 'error');
     }
   };
 
@@ -111,9 +120,15 @@ const UsersSection = () => {
     if (window.confirm('¿Estás seguro de eliminar este usuario?')) {
       try {
         const res = await fetch(`http://localhost:5000/api/usuarios/${id}`, { method: 'DELETE' });
-        if (res.ok) fetchUsers();
+        if (res.ok) {
+          fetchUsers();
+          showToast('Usuario eliminado', 'error');
+        } else {
+          showToast('No se pudo eliminar the usuario', 'error');
+        }
       } catch (err) {
         console.error(err);
+        showToast('Error al intentar eliminar', 'error');
       }
     }
   };

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Modal from '../../components/Modal';
+import { useToast } from '../../context/ToastContext';
 
 const IngredientsSection = () => {
+  const { showToast } = useToast();
   const [ingredients, setIngredients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -66,9 +68,16 @@ const IngredientsSection = () => {
       if (res.ok) {
         setIsModalOpen(false);
         fetchIngredients();
+        showToast(
+          editingIngredient ? 'Insumo actualizado' : 'Insumo registrado correctamente',
+          editingIngredient ? 'update' : 'success'
+        );
+      } else {
+        showToast('Error al procesar insumo', 'error');
       }
     } catch (err) {
       console.error(err);
+      showToast('Error de conexión', 'error');
     }
   };
 
@@ -76,9 +85,15 @@ const IngredientsSection = () => {
     if (window.confirm('¿Estás seguro de eliminar este ingrediente?')) {
       try {
         const res = await fetch(`http://localhost:5000/api/ingredientes/${id}`, { method: 'DELETE' });
-        if (res.ok) fetchIngredients();
+        if (res.ok) {
+          fetchIngredients();
+          showToast('Ingrediente eliminado', 'error');
+        } else {
+          showToast('No se pudo eliminar el ingrediente', 'error');
+        }
       } catch (err) {
         console.error(err);
+        showToast('Error al intentar eliminar', 'error');
       }
     }
   };
@@ -91,9 +106,15 @@ const IngredientsSection = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...ingredientToUpdate, estado: newStatus })
       });
-      if (res.ok) fetchIngredients();
+      if (res.ok) {
+        fetchIngredients();
+        showToast(`Estado de ${ingredientToUpdate.nombre_ingrediente} cambiado a ${newStatus}`, 'update');
+      } else {
+        showToast('Error al cambiar estado', 'error');
+      }
     } catch (err) {
       console.error(err);
+      showToast('Error de conexión', 'error');
     }
   };
 

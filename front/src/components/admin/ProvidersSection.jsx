@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Modal from '../../components/Modal';
+import { useToast } from '../../context/ToastContext';
 
 const ProvidersSection = () => {
+  const { showToast } = useToast();
   const [providers, setProviders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -66,9 +68,16 @@ const ProvidersSection = () => {
       if (res.ok) {
         setIsModalOpen(false);
         fetchProviders();
+        showToast(
+          editingProvider ? 'Proveedor actualizado' : 'Proveedor registrado exitosamente',
+          editingProvider ? 'update' : 'success'
+        );
+      } else {
+        showToast('Error al procesar proveedor', 'error');
       }
     } catch (err) {
       console.error(err);
+      showToast('Error de conexión', 'error');
     }
   };
 
@@ -76,9 +85,15 @@ const ProvidersSection = () => {
     if (window.confirm('¿Estás seguro de eliminar este proveedor?')) {
       try {
         const res = await fetch(`http://localhost:5000/api/proveedores/${id}`, { method: 'DELETE' });
-        if (res.ok) fetchProviders();
+        if (res.ok) {
+          fetchProviders();
+          showToast('Proveedor eliminado', 'error');
+        } else {
+          showToast('No se pudo eliminar el proveedor', 'error');
+        }
       } catch (err) {
         console.error(err);
+        showToast('Error al intentar eliminar', 'error');
       }
     }
   };

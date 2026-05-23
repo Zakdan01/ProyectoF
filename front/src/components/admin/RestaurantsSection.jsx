@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Modal from '../../components/Modal';
+import { useToast } from '../../context/ToastContext';
 
 const RestaurantsSection = () => {
+  const { showToast } = useToast();
   const [restaurantes, setRestaurantes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -80,9 +82,33 @@ const RestaurantsSection = () => {
       if (res.ok) {
         setIsModalOpen(false);
         fetchRestaurantes();
+        showToast(
+          editingRestaurant ? 'Sucursal actualizada' : 'Sucursal creada exitosamente',
+          editingRestaurant ? 'update' : 'success'
+        );
+      } else {
+        showToast('Error al guardar sucursal', 'error');
       }
     } catch (err) {
       console.error(err);
+      showToast('Error de conexión', 'error');
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm('¿Estás seguro de eliminar esta sucursal?')) {
+      try {
+        const res = await fetch(`http://localhost:5000/api/restaurantes/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+          fetchRestaurantes();
+          showToast('Sucursal eliminada', 'error');
+        } else {
+          showToast('No se pudo eliminar la sucursal', 'error');
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('Error al intentar eliminar', 'error');
+      }
     }
   };
 

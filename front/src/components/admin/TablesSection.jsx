@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Modal from '../../components/Modal';
 import { useAppContext } from '../../context/AppContext';
+import { useToast } from '../../context/ToastContext';
 
 const TablesSection = () => {
   const { user } = useAppContext();
+  const { showToast } = useToast();
   const [tables, setTables] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
   const [selectedRestaurante, setSelectedRestaurante] = useState('');
@@ -70,9 +72,13 @@ const TablesSection = () => {
         setIsModalOpen(false);
         setFormData({ n_mesa: '', capacidad: '', estado: 'Disponible', id_restaurante: '' });
         fetchTables(selectedRestaurante);
+        showToast('Mesa creada exitosamente', 'success');
+      } else {
+        showToast('Error al crear mesa', 'error');
       }
     } catch (err) {
       console.error(err);
+      showToast('Error de conexión', 'error');
     }
   };
 
@@ -84,9 +90,15 @@ const TablesSection = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...tableToUpdate, estado: newStatus })
       });
-      if (res.ok) fetchTables(selectedRestaurante);
+      if (res.ok) {
+        fetchTables(selectedRestaurante);
+        showToast(`Mesa #${tableToUpdate.n_mesa} actualizada a ${newStatus}`, 'update');
+      } else {
+        showToast('Error al actualizar estado', 'error');
+      }
     } catch (err) {
       console.error(err);
+      showToast('Error de conexión', 'error');
     }
   };
 
@@ -94,9 +106,15 @@ const TablesSection = () => {
     if (window.confirm('¿Estás seguro de eliminar esta mesa?')) {
       try {
         const res = await fetch(`http://localhost:5000/api/mesas/${id}`, { method: 'DELETE' });
-        if (res.ok) fetchTables(selectedRestaurante);
+        if (res.ok) {
+          fetchTables(selectedRestaurante);
+          showToast('Mesa eliminada', 'error');
+        } else {
+          showToast('No se pudo eliminar la mesa', 'error');
+        }
       } catch (err) {
         console.error(err);
+        showToast('Error al intentar eliminar', 'error');
       }
     }
   };

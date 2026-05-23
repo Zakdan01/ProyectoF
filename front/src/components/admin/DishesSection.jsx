@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Modal from '../../components/Modal';
 import { useAppContext } from '../../context/AppContext';
+import { useToast } from '../../context/ToastContext';
 
 const DishesSection = () => {
   const { user } = useAppContext();
+  const { showToast } = useToast();
   const [dishes, setDishes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -63,9 +65,16 @@ const DishesSection = () => {
       if (res.ok) {
         setIsModalOpen(false);
         fetchDishes();
+        showToast(
+          editingDish ? 'Platillo actualizado' : 'Platillo creado exitosamente',
+          editingDish ? 'update' : 'success'
+        );
+      } else {
+        showToast('Error al guardar platillo', 'error');
       }
     } catch (err) {
       console.error(err);
+      showToast('Error de conexión', 'error');
     }
   };
 
@@ -77,11 +86,13 @@ const DishesSection = () => {
         });
         if (res.ok) {
           fetchDishes();
+          showToast('Platillo eliminado', 'error');
         } else {
-          alert('No se pudo eliminar el platillo. Podría estar asociado a una orden.');
+          showToast('No se pudo eliminar el platillo', 'error');
         }
       } catch (err) {
         console.error(err);
+        showToast('Error al intentar eliminar', 'error');
       }
     }
   };

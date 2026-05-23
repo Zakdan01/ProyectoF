@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Modal from '../../components/Modal';
+import { useToast } from '../../context/ToastContext';
 
 const SupplyManagementSection = () => {
+  const { showToast } = useToast();
   const [mappings, setMappings] = useState([]);
   const [allIngredients, setIngredients] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -55,9 +57,13 @@ const SupplyManagementSection = () => {
       if (res.ok) {
         setIsModalOpen(false);
         fetchData();
+        showToast('Suministros actualizados correctamente', 'update');
+      } else {
+        showToast('Error al actualizar suministros', 'error');
       }
     } catch (err) {
       console.error(err);
+      showToast('Error de conexión', 'error');
     }
   };
 

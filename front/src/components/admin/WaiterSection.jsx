@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useAppContext } from '../../context/AppContext';
+import { useToast } from '../../context/ToastContext';
+import Modal from '../Modal';
 
 const WaiterSection = () => {
   const { user } = useAppContext();
+  const { showToast } = useToast();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [orderToConfirm, setOrderToConfirm] = useState(null);
 
   const fetchOrders = async () => {
     try {
@@ -26,11 +31,11 @@ const WaiterSection = () => {
     return () => clearInterval(int); 
   }, []);
 
-  const handleDeliver = async (id) => {
-    if (!user) return alert("Debes estar logueado para entregar órdenes");
+  const handleDeliver = async () => {
+    if (!user || !orderToConfirm) return alert("Debes estar logueado para entregar órdenes");
     
     try {
-      const res = await fetch(`http://localhost:5000/api/ordenes/${id}/estado`, {
+      const res = await fetch(`http://localhost:5000/api/ordenes/${orderToConfirm.id_orden}/estado`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -40,13 +45,23 @@ const WaiterSection = () => {
       });
       if (res.ok) {
         fetchOrders();
+        setIsConfirmModalOpen(false);
+        const orderId = orderToConfirm.id_orden;
+        setOrderToConfirm(null);
+        showToast(`Orden #${orderId} entregada con éxito`, 'update');
       } else {
         const errorData = await res.json();
-        alert("Error al entregar: " + (errorData.error || "Error desconocido"));
+        showToast("Error al entregar: " + (errorData.error || "Error desconocido"), 'error');
       }
     } catch (err) {
       console.error(err);
+      showToast('Error de conexión', 'error');
     }
+  };
+
+  const openConfirmModal = (order) => {
+    setOrderToConfirm(order);
+    setIsConfirmModalOpen(true);
   };
 
   if (loading) return <div className="p-10 text-center dark:text-white">Cargando entregas...</div>;
@@ -101,7 +116,7 @@ const WaiterSection = () => {
                           {o.estado}
                         </span>
                         <button 
-                          onClick={() => handleDeliver(o.id_orden)}
+                          onClick={() => openConfirmModal(o)}
                           className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-black px-4 py-2 rounded-xl transition shadow-lg shadow-blue-600/20 whitespace-nowrap flex items-center gap-2 mx-auto"
                         >
                           🚀 ENTREGAR
@@ -112,7 +127,7 @@ const WaiterSection = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="5" className="p-20 text-center dark:text-gray-400 italic">
+                  <td colSpan="6" className="p-20 text-center dark:text-gray-400 italic">
                     No hay pedidos listos para entrega en este momento.
                   </td>
                 </tr>
@@ -121,8 +136,59 @@ const WaiterSection = () => {
           </table>
         </div>
       </div>
+
+      <Modal 
+        isOpen={isConfirmModalOpen} 
+        onClose={() => setIsConfirmModalOpen(false)} 
+        title="Confirmar Entrega"
+        maxWidth="max-w-md"
+      >
+        {orderToConfirm && (
+          <div className="space-y-6">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-3xl">🚀</span>
+              </div>
+              <p className="dark:text-gray-300">¿Confirmas que vas a entregar el siguiente pedido?</p>
+            </div>
+
+            <div className="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 space-y-3">
+              <div className="flex justify-between items-center border-b border-gray-100 dark:border-gray-700 pb-2">
+                <span className="text-xs font-bold text-gray-400 uppercase">Orden</span>
+                <span className="font-black dark:text-white">#{orderToConfirm.id_orden}</span>
+              </div>
+              <div className="flex justify-between items-center border-b border-gray-100 dark:border-gray-700 pb-2">
+                <span className="text-xs font-bold text-gray-400 uppercase">Cliente</span>
+                <span className="font-bold dark:text-white">{orderToConfirm.cliente_nombre} {orderToConfirm.cliente_apellido}</span>
+              </div>
+              <div className="space-y-1">
+                <span className="text-xs font-bold text-gray-400 uppercase">Contenido</span>
+                <p className="text-sm dark:text-gray-300 leading-relaxed">
+                  {orderToConfirm.platillos}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-3 pt-2">
+              <button 
+                onClick={() => setIsConfirmModalOpen(false)}
+                className="flex-1 px-6 py-3 rounded-xl font-bold text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={handleDeliver}
+                className="flex-1 px-6 py-3 rounded-xl font-black bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/20 transition-all"
+              >
+                CONFIRMAR
+              </button>
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };
 
 export default WaiterSection;
+

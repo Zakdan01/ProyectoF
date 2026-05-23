@@ -88,7 +88,7 @@ const AdminDashboard = () => {
       </aside>
 
       <div className="flex-grow flex flex-col min-h-[calc(100vh-73px)] overflow-x-hidden">
-        <main className="flex-grow p-8 max-w-[1600px] mx-auto w-full">
+        <main className="flex-grow p-8 max-w-7xl mx-auto w-full">
           <header className="mb-10">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
               <div>

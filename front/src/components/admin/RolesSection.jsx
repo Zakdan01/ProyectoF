@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Modal from '../../components/Modal';
+import { useToast } from '../../context/ToastContext';
 
 const RolesSection = () => {
+  const { showToast } = useToast();
   const [roles, setRoles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -44,14 +46,15 @@ const RolesSection = () => {
         setIsModalOpen(false);
         setFormData({ nombre: '', descripcion: '' });
         fetchRoles();
+        showToast('¡Rol creado exitosamente!', 'success');
       } else {
         const errorData = await res.json();
         console.error('Error del servidor:', errorData);
-        alert('Error al crear el rol: ' + (errorData.error || 'Intenta de nuevo'));
+        showToast('Error al crear el rol: ' + (errorData.error || 'Intenta de nuevo'), 'error');
       }
     } catch (err) {
       console.error('Error en la petición:', err);
-      alert('Error de conexión con el servidor.');
+      showToast('Error de conexión con el servidor.', 'error');
     }
   };
 
@@ -59,9 +62,15 @@ const RolesSection = () => {
     if (window.confirm('¿Estás seguro de eliminar este rol?')) {
       try {
         const res = await fetch(`http://localhost:5000/api/roles/${id}`, { method: 'DELETE' });
-        if (res.ok) fetchRoles();
+        if (res.ok) {
+          fetchRoles();
+          showToast('Rol eliminado correctamente', 'error');
+        } else {
+          showToast('No se pudo eliminar el rol', 'error');
+        }
       } catch (err) {
         console.error(err);
+        showToast('Error al intentar eliminar', 'error');
       }
     }
   };
