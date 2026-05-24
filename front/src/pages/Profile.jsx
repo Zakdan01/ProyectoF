@@ -116,66 +116,66 @@ const Profile = () => {
   return (
     <div className="py-12 px-6 max-w-6xl mx-auto animate-fadeIn">
       {/* Header con Estilo Premium */}
-      <div className="flex flex-col md:flex-row items-center gap-8 mb-12 bg-white dark:bg-gray-800 p-8 rounded-[3rem] shadow-sm border border-gray-100 dark:border-gray-700">
-        <div className="relative group">
-          <div className="w-40 h-40 bg-gradient-to-tr from-orange-600 to-orange-400 rounded-[2.5rem] flex items-center justify-center text-6xl shadow-2xl rotate-3 group-hover:rotate-0 transition-transform duration-500 text-white font-black">
+      <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8 mb-8 md:mb-12 bg-white dark:bg-gray-800 p-6 md:p-8 rounded-[2rem] md:rounded-[3rem] shadow-sm border border-gray-100 dark:border-gray-700">
+        <div className="relative group flex-shrink-0">
+          <div className="w-32 h-32 md:w-40 md:h-40 bg-gradient-to-tr from-orange-600 to-orange-400 rounded-[2rem] md:rounded-[2.5rem] flex items-center justify-center text-5xl md:text-6xl shadow-2xl rotate-3 md:group-hover:rotate-0 transition-transform duration-500 text-white font-black">
             {user.nombre[0].toUpperCase()}{user.apellido_pat ? user.apellido_pat[0].toUpperCase() : ''}
           </div>
-          <div className="absolute -bottom-2 -right-2 w-12 h-12 bg-white dark:bg-gray-900 rounded-2xl flex items-center justify-center shadow-lg border border-orange-100 dark:border-orange-900/30 text-2xl">
+          <div className="absolute -bottom-2 -right-2 w-10 h-10 md:w-12 md:h-12 bg-white dark:bg-gray-900 rounded-2xl flex items-center justify-center shadow-lg border border-orange-100 dark:border-orange-900/30 text-xl md:text-2xl">
             ✨
           </div>
         </div>
-        <div className="text-center md:text-left flex-grow">
-          <p className="text-orange-600 font-black text-xs uppercase tracking-[0.3em] mb-2">Miembro del Equipo</p>
-          <h2 className="text-5xl font-black text-gray-900 dark:text-white mb-2 tracking-tighter">
+        <div className="text-center md:text-left flex-grow w-full">
+          <p className="text-orange-600 font-black text-[10px] md:text-xs uppercase tracking-[0.3em] mb-2">Miembro del Equipo</p>
+          <h2 className="text-3xl md:text-5xl font-black text-gray-900 dark:text-white mb-2 tracking-tighter leading-tight">
             {user.nombre} {user.apellido_pat}
           </h2>
-          <div className="flex flex-wrap justify-center md:justify-start gap-3 mt-4">
-             <span className="bg-orange-100 dark:bg-orange-900/30 text-orange-600 px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider border border-orange-200 dark:border-orange-800">
+          <div className="flex flex-wrap justify-center md:justify-start gap-2 md:gap-3 mt-4">
+             <span className="bg-orange-100 dark:bg-orange-900/30 text-orange-600 px-3 md:px-4 py-1.5 rounded-xl text-[10px] md:text-xs font-black uppercase tracking-wider border border-orange-200 dark:border-orange-800">
                👑 {user.rol_nombre || 'Usuario'}
              </span>
-             <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-600 px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider border border-blue-200 dark:border-blue-800">
+             <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-600 px-3 md:px-4 py-1.5 rounded-xl text-[10px] md:text-xs font-black uppercase tracking-wider border border-blue-200 dark:border-blue-800">
                📍 {user.restaurante_nombre || 'Sucursal General'}
              </span>
           </div>
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-8">
+      <div className="grid lg:grid-cols-3 gap-6 md:gap-8">
         {/* Tarjeta de Seguridad */}
         <div className="lg:col-span-1 space-y-6">
-          <div className="bg-white dark:bg-gray-800 rounded-[2.5rem] p-8 shadow-sm border border-gray-100 dark:border-gray-700 relative overflow-hidden h-full">
-            <h3 className="text-sm font-black text-gray-400 uppercase tracking-widest mb-8">Información de Cuenta</h3>
+          <div className="bg-white dark:bg-gray-800 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 shadow-sm border border-gray-100 dark:border-gray-700 relative overflow-hidden h-full">
+            <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-6 md:mb-8">Información de Cuenta</h3>
             
-            <div className="space-y-8">
+            <div className="space-y-6 md:space-y-8">
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-gray-50 dark:bg-gray-900 rounded-xl flex items-center justify-center text-xl shadow-inner">📧</div>
-                <div>
+                <div className="w-10 h-10 bg-gray-50 dark:bg-gray-900 rounded-xl flex items-center justify-center text-xl shadow-inner flex-shrink-0">📧</div>
+                <div className="min-w-0">
                   <p className="text-[10px] font-bold text-gray-400 uppercase">Correo Personal</p>
-                  <p className="font-bold dark:text-white break-all">{user.correo}</p>
+                  <p className="font-bold dark:text-white break-all text-sm md:text-base">{user.correo}</p>
                 </div>
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-gray-50 dark:bg-gray-900 rounded-xl flex items-center justify-center text-xl shadow-inner">🆔</div>
+                <div className="w-10 h-10 bg-gray-50 dark:bg-gray-900 rounded-xl flex items-center justify-center text-xl shadow-inner flex-shrink-0">🆔</div>
                 <div>
                   <p className="text-[10px] font-bold text-gray-400 uppercase">Documento CI</p>
-                  <p className="font-bold dark:text-white font-mono">{user.ci}</p>
+                  <p className="font-bold dark:text-white font-mono text-sm md:text-base">{user.ci}</p>
                 </div>
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-gray-50 dark:bg-gray-900 rounded-xl flex items-center justify-center text-xl shadow-inner">📅</div>
+                <div className="w-10 h-10 bg-gray-50 dark:bg-gray-900 rounded-xl flex items-center justify-center text-xl shadow-inner flex-shrink-0">📅</div>
                 <div>
                   <p className="text-[10px] font-bold text-gray-400 uppercase">Fecha de Ingreso</p>
-                  <p className="font-bold dark:text-white">{new Date(user.fecha_registro).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                  <p className="font-bold dark:text-white text-sm md:text-base">{new Date(user.fecha_registro).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
                 </div>
               </div>
 
-              <div className="pt-8 border-t border-gray-50 dark:border-gray-700 mt-auto flex flex-col gap-4">
+              <div className="pt-6 md:pt-8 border-t border-gray-50 dark:border-gray-700 mt-auto flex flex-col gap-4">
                 <div>
                   <p className="text-[10px] text-gray-400 font-bold uppercase mb-2">ID Interno de Sistema</p>
-                  <code className="bg-gray-100 dark:bg-gray-900 px-3 py-1 rounded-lg text-orange-600 font-bold">USR-{user.id_usuario}</code>
+                  <code className="bg-gray-100 dark:bg-gray-900 px-3 py-1 rounded-lg text-orange-600 font-bold text-xs">USR-{user.id_usuario}</code>
                 </div>
 
                 <button 
@@ -184,7 +184,7 @@ const Profile = () => {
                     setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
                     setPasswordError('');
                   }}
-                  className="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-3 rounded-2xl text-xs font-black uppercase tracking-widest hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
+                  className="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-3 md:py-4 rounded-2xl text-[10px] md:text-xs font-black uppercase tracking-widest hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
                 >
                   <span>🔐</span> Cambiar Contraseña
                 </button>
@@ -195,25 +195,25 @@ const Profile = () => {
 
         {/* Panel de Formulario */}
         <div className="lg:col-span-2">
-          <div className="bg-white dark:bg-gray-800 rounded-[2.5rem] shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
-            <div className="px-10 py-8 border-b border-gray-50 dark:border-gray-700 flex justify-between items-center bg-gray-50/30 dark:bg-gray-900/30">
+          <div className="bg-white dark:bg-gray-800 rounded-[2rem] md:rounded-[2.5rem] shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
+            <div className="px-6 md:px-10 py-6 md:py-8 border-b border-gray-50 dark:border-gray-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gray-50/30 dark:bg-gray-900/30">
               <div>
-                <h3 className="text-xl font-black dark:text-white tracking-tight">Editar Información</h3>
-                <p className="text-xs text-gray-400 font-medium">Mantén tus datos actualizados para el sistema</p>
+                <h3 className="text-lg md:text-xl font-black dark:text-white tracking-tight">Editar Información</h3>
+                <p className="text-[10px] md:text-xs text-gray-400 font-medium">Mantén tus datos actualizados para el sistema</p>
               </div>
               {!isEditing && (
                 <button 
                   onClick={() => setIsEditing(true)}
-                  className="bg-orange-600 text-white px-6 py-3 rounded-2xl text-xs font-black transition-all hover:bg-orange-700 hover:shadow-lg hover:shadow-orange-600/30 uppercase tracking-widest active:scale-95"
+                  className="bg-orange-600 text-white px-5 md:px-6 py-2.5 md:py-3 rounded-xl md:rounded-2xl text-[10px] md:text-xs font-black transition-all hover:bg-orange-700 hover:shadow-lg hover:shadow-orange-600/30 uppercase tracking-widest active:scale-95"
                 >
                   Editar Perfil
                 </button>
               )}
             </div>
 
-            <div className="p-10">
+            <div className="p-6 md:p-10">
               {message.text && (
-                <div className={`mb-10 p-5 rounded-2xl text-sm font-bold flex items-center gap-4 border animate-fadeIn ${
+                <div className={`mb-8 md:mb-10 p-4 md:p-5 rounded-2xl text-xs md:text-sm font-bold flex items-center gap-4 border animate-fadeIn ${
                   message.type === 'success' 
                   ? 'bg-green-50 text-green-700 border-green-200 shadow-sm shadow-green-100' 
                   : 'bg-red-50 text-red-700 border-red-200 shadow-sm shadow-red-100'
@@ -223,87 +223,87 @@ const Profile = () => {
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-x-10 gap-y-8">
+              <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-x-6 md:gap-x-10 gap-y-6 md:gap-y-8">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-orange-500 uppercase ml-1 tracking-[0.2em]">Nombre</label>
+                  <label className="text-[9px] md:text-[10px] font-black text-orange-500 uppercase ml-1 tracking-[0.2em]">Nombre</label>
                   <input 
                     type="text" 
                     name="nombre"
                     value={formData.nombre}
                     onChange={handleChange}
                     disabled={!isEditing}
-                    className="w-full p-4 bg-gray-50 dark:bg-gray-900 border-2 border-transparent focus:border-orange-500 focus:bg-white dark:focus:bg-gray-950 rounded-2xl outline-none dark:text-white disabled:opacity-60 transition-all font-bold text-lg shadow-inner"
+                    className="w-full p-3 md:p-4 bg-gray-50 dark:bg-gray-900 border-2 border-transparent focus:border-orange-500 focus:bg-white dark:focus:bg-gray-950 rounded-xl md:rounded-2xl outline-none dark:text-white disabled:opacity-60 transition-all font-bold text-base md:text-lg shadow-inner"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-orange-500 uppercase ml-1 tracking-[0.2em]">Apellido Paterno</label>
+                  <label className="text-[9px] md:text-[10px] font-black text-orange-500 uppercase ml-1 tracking-[0.2em]">Apellido Paterno</label>
                   <input 
                     type="text" 
                     name="apellido_pat"
                     value={formData.apellido_pat}
                     onChange={handleChange}
                     disabled={!isEditing}
-                    className="w-full p-4 bg-gray-50 dark:bg-gray-900 border-2 border-transparent focus:border-orange-500 focus:bg-white dark:focus:bg-gray-950 rounded-2xl outline-none dark:text-white disabled:opacity-60 transition-all font-bold text-lg shadow-inner"
+                    className="w-full p-3 md:p-4 bg-gray-50 dark:bg-gray-900 border-2 border-transparent focus:border-orange-500 focus:bg-white dark:focus:bg-gray-950 rounded-xl md:rounded-2xl outline-none dark:text-white disabled:opacity-60 transition-all font-bold text-base md:text-lg shadow-inner"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-orange-500 uppercase ml-1 tracking-[0.2em]">Apellido Materno</label>
+                  <label className="text-[9px] md:text-[10px] font-black text-orange-500 uppercase ml-1 tracking-[0.2em]">Apellido Materno</label>
                   <input 
                     type="text" 
                     name="apellido_mat"
                     value={formData.apellido_mat}
                     onChange={handleChange}
                     disabled={!isEditing}
-                    className="w-full p-4 bg-gray-50 dark:bg-gray-900 border-2 border-transparent focus:border-orange-500 focus:bg-white dark:focus:bg-gray-950 rounded-2xl outline-none dark:text-white disabled:opacity-60 transition-all font-bold text-lg shadow-inner"
+                    className="w-full p-3 md:p-4 bg-gray-50 dark:bg-gray-900 border-2 border-transparent focus:border-orange-500 focus:bg-white dark:focus:bg-gray-950 rounded-xl md:rounded-2xl outline-none dark:text-white disabled:opacity-60 transition-all font-bold text-base md:text-lg shadow-inner"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-orange-500 uppercase ml-1 tracking-[0.2em]">Cédula Identidad (CI)</label>
+                  <label className="text-[9px] md:text-[10px] font-black text-orange-500 uppercase ml-1 tracking-[0.2em]">Cédula Identidad (CI)</label>
                   <input 
                     type="text" 
                     name="ci"
                     value={formData.ci}
                     onChange={handleChange}
                     disabled={!isEditing}
-                    className="w-full p-4 bg-gray-50 dark:bg-gray-900 border-2 border-transparent focus:border-orange-500 focus:bg-white dark:focus:bg-gray-950 rounded-2xl outline-none dark:text-white disabled:opacity-60 transition-all font-bold text-lg shadow-inner font-mono"
+                    className="w-full p-3 md:p-4 bg-gray-50 dark:bg-gray-900 border-2 border-transparent focus:border-orange-500 focus:bg-white dark:focus:bg-gray-950 rounded-xl md:rounded-2xl outline-none dark:text-white disabled:opacity-60 transition-all font-bold text-base md:text-lg shadow-inner font-mono"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-orange-500 uppercase ml-1 tracking-[0.2em]">Correo Electrónico</label>
+                  <label className="text-[9px] md:text-[10px] font-black text-orange-500 uppercase ml-1 tracking-[0.2em]">Correo Electrónico</label>
                   <input 
                     type="email" 
                     name="correo"
                     value={formData.correo}
                     onChange={handleChange}
                     disabled={!isEditing}
-                    className="w-full p-4 bg-gray-50 dark:bg-gray-900 border-2 border-transparent focus:border-orange-500 focus:bg-white dark:focus:bg-gray-950 rounded-2xl outline-none dark:text-white disabled:opacity-60 transition-all font-bold text-lg shadow-inner"
+                    className="w-full p-3 md:p-4 bg-gray-50 dark:bg-gray-900 border-2 border-transparent focus:border-orange-500 focus:bg-white dark:focus:bg-gray-950 rounded-xl md:rounded-2xl outline-none dark:text-white disabled:opacity-60 transition-all font-bold text-base md:text-lg shadow-inner"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-orange-500 uppercase ml-1 tracking-[0.2em]">Teléfono Móvil</label>
+                  <label className="text-[9px] md:text-[10px] font-black text-orange-500 uppercase ml-1 tracking-[0.2em]">Teléfono Móvil</label>
                   <input 
                     type="text" 
                     name="telefono"
                     value={formData.telefono}
                     onChange={handleChange}
                     disabled={!isEditing}
-                    className="w-full p-4 bg-gray-50 dark:bg-gray-900 border-2 border-transparent focus:border-orange-500 focus:bg-white dark:focus:bg-gray-950 rounded-2xl outline-none dark:text-white disabled:opacity-60 transition-all font-bold text-lg shadow-inner"
+                    className="w-full p-3 md:p-4 bg-gray-50 dark:bg-gray-900 border-2 border-transparent focus:border-orange-500 focus:bg-white dark:focus:bg-gray-950 rounded-xl md:rounded-2xl outline-none dark:text-white disabled:opacity-60 transition-all font-bold text-base md:text-lg shadow-inner"
                   />
                 </div>
 
                 {isEditing && (
-                  <div className="md:col-span-2 flex justify-end items-center gap-8 mt-10 pt-10 border-t-2 border-dashed border-gray-50 dark:border-gray-700">
+                  <div className="md:col-span-2 flex flex-col sm:flex-row justify-end items-center gap-6 md:gap-8 mt-6 md:mt-10 pt-6 md:pt-10 border-t-2 border-dashed border-gray-50 dark:border-gray-700">
                     <button 
                       type="button"
                       onClick={() => setIsEditing(false)}
-                      className="text-gray-400 hover:text-red-500 font-black transition-colors uppercase text-xs tracking-[0.2em]"
+                      className="text-gray-400 hover:text-red-500 font-black transition-colors uppercase text-[10px] md:text-xs tracking-[0.2em]"
                     >
                       Descartar
                     </button>
                     <button 
                       type="submit"
                       disabled={loading}
-                      className="bg-orange-600 text-white px-12 py-5 rounded-[2rem] font-black hover:bg-orange-700 shadow-2xl shadow-orange-600/30 transition-all active:scale-95 disabled:opacity-50 flex items-center gap-3"
+                      className="w-full sm:w-auto bg-orange-600 text-white px-8 md:px-12 py-4 md:py-5 rounded-[1.5rem] md:rounded-[2rem] font-black hover:bg-orange-700 shadow-2xl shadow-orange-600/30 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-3 text-sm md:text-base"
                     >
                       {loading ? (
                         <>

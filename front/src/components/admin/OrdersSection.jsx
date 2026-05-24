@@ -122,14 +122,14 @@ const OrdersSection = () => {
   );
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-180px)] animate-fadeIn">
-      <div className="flex-grow flex flex-col gap-6 overflow-hidden">
+    <div className="flex flex-col lg:flex-row gap-6 lg:h-[calc(100vh-220px)] animate-fadeIn">
+      <div className="flex-grow flex flex-col gap-6 overflow-hidden min-h-[500px] lg:min-h-0">
         
         {/* REGISTRO DE CLIENTE DIRECTO */}
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col md:flex-row gap-6">
+        <div className="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col md:flex-row gap-4 md:gap-6">
           <div className="flex-grow space-y-4">
             <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest">Datos del Cliente</h4>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               <input 
                 placeholder="Nombre" 
                 className="p-3 bg-gray-50 dark:bg-gray-900 border-2 border-transparent focus:border-orange-500 rounded-xl text-sm dark:text-white outline-none transition-all" 
@@ -177,23 +177,23 @@ const OrdersSection = () => {
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xl">🍕</span>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 overflow-y-auto pr-2 pb-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 overflow-y-auto pr-2 pb-6 custom-scrollbar">
             {filteredDishes.map(p => (
               <button 
                 key={p.id_platillo} 
                 onClick={() => addToCart(p)}
                 disabled={p.disponibilidad !== 'Disponible'}
-                className={`flex flex-col p-5 bg-white dark:bg-gray-800 rounded-3xl border-2 transition-all relative group text-left shadow-sm ${
+                className={`flex flex-col p-4 md:p-5 bg-white dark:bg-gray-800 rounded-3xl border-2 transition-all relative group text-left shadow-sm ${
                   p.disponibilidad === 'Disponible' 
                   ? 'hover:border-orange-500 border-transparent hover:shadow-lg' 
                   : 'opacity-50 grayscale border-transparent cursor-not-allowed'
                 }`}
               >
                 <div className="flex justify-between items-start mb-3">
-                  <div className="w-12 h-12 bg-orange-50 dark:bg-orange-900/20 rounded-2xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                  <div className="w-10 h-10 md:w-12 md:h-12 bg-orange-50 dark:bg-orange-900/20 rounded-2xl flex items-center justify-center text-xl md:text-2xl group-hover:scale-110 transition-transform">
                     🍛
                   </div>
-                  <span className={`text-[9px] font-black px-2 py-1 rounded-lg uppercase border ${
+                  <span className={`text-[8px] md:text-[9px] font-black px-2 py-1 rounded-lg uppercase border ${
                     p.disponibilidad === 'Disponible' 
                     ? 'bg-green-100 text-green-700 border-green-200' 
                     : 'bg-red-100 text-red-700 border-red-200'
@@ -201,9 +201,9 @@ const OrdersSection = () => {
                     {p.disponibilidad}
                   </span>
                 </div>
-                <p className="font-bold dark:text-white text-base leading-tight mb-1">{p.nombre_platillo}</p>
-                <p className="text-orange-600 font-black text-lg">Bs. {p.precio}</p>
-                <div className="absolute bottom-4 right-4 bg-orange-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-black shadow-lg opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all scale-0 group-hover:scale-100">
+                <p className="font-bold dark:text-white text-sm md:text-base leading-tight mb-1 truncate w-full">{p.nombre_platillo}</p>
+                <p className="text-orange-600 font-black text-base md:text-lg">Bs. {p.precio}</p>
+                <div className="absolute bottom-4 right-4 bg-orange-600 text-white w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center font-black shadow-lg opacity-0 lg:group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all scale-0 lg:group-hover:scale-100">
                   +
                 </div>
               </button>
@@ -213,60 +213,60 @@ const OrdersSection = () => {
       </div>
 
       {/* CARRITO */}
-      <div className="w-full lg:w-[400px] flex flex-col bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden h-full">
-        <div className="p-6 bg-gray-50/50 dark:bg-gray-900/50 border-b dark:border-gray-700">
-          <h4 className="text-xl font-black dark:text-white flex items-center gap-3">
+      <div className="w-full lg:w-[380px] xl:w-[420px] flex flex-col bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden lg:h-full min-h-[400px]">
+        <div className="p-4 md:p-6 bg-gray-50/50 dark:bg-gray-900/50 border-b dark:border-gray-700">
+          <h4 className="text-lg md:text-xl font-black dark:text-white flex items-center gap-3">
             🛒 Carrito <span className="bg-orange-600 text-white text-[10px] px-2 py-0.5 rounded-full">{cart.length}</span>
           </h4>
         </div>
 
-        <div className="flex-grow overflow-y-auto p-6 space-y-4">
+        <div className="flex-grow overflow-y-auto p-4 md:p-6 space-y-4 custom-scrollbar">
           {cart.length > 0 ? cart.map(item => (
-            <div key={item.id_platillo} className="flex gap-4 group animate-fadeIn">
-              <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-2xl flex items-center justify-center text-2xl">
+            <div key={item.id_platillo} className="flex gap-3 md:gap-4 group animate-fadeIn">
+              <div className="w-12 h-12 md:w-16 md:h-16 bg-gray-100 dark:bg-gray-700 rounded-2xl flex-shrink-0 flex items-center justify-center text-xl md:text-2xl">
                 🍲
               </div>
-              <div className="flex-grow">
-                <div className="flex justify-between">
-                  <p className="text-sm font-black dark:text-white truncate max-w-[150px]">{item.nombre_platillo}</p>
-                  <button onClick={() => removeFromCart(item.id_platillo)} className="text-gray-300 hover:text-red-500 transition-colors">🗑️</button>
+              <div className="flex-grow min-w-0">
+                <div className="flex justify-between items-start">
+                  <p className="text-xs md:text-sm font-black dark:text-white truncate pr-2">{item.nombre_platillo}</p>
+                  <button onClick={() => removeFromCart(item.id_platillo)} className="text-gray-300 hover:text-red-500 transition-colors flex-shrink-0">🗑️</button>
                 </div>
                 <div className="flex justify-between items-end mt-2">
-                  <div className="flex items-center bg-gray-50 dark:bg-gray-900 rounded-xl p-1 border dark:border-gray-700">
-                    <button onClick={() => updateQuantity(item.id_platillo, -1)} className="w-8 h-8 flex items-center justify-center font-bold text-gray-500 hover:text-orange-600 transition">-</button>
-                    <span className="w-8 text-center font-black dark:text-white text-sm">{item.cantidad}</span>
-                    <button onClick={() => updateQuantity(item.id_platillo, 1)} className="w-8 h-8 flex items-center justify-center font-bold text-gray-500 hover:text-orange-600 transition">+</button>
+                  <div className="flex items-center bg-gray-50 dark:bg-gray-900 rounded-xl p-1 border dark:border-gray-700 scale-90 md:scale-100 origin-left">
+                    <button onClick={() => updateQuantity(item.id_platillo, -1)} className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center font-bold text-gray-500 hover:text-orange-600 transition">-</button>
+                    <span className="w-6 md:w-8 text-center font-black dark:text-white text-xs md:text-sm">{item.cantidad}</span>
+                    <button onClick={() => updateQuantity(item.id_platillo, 1)} className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center font-bold text-gray-500 hover:text-orange-600 transition">+</button>
                   </div>
-                  <p className="font-black text-orange-600">Bs. {item.subtotal}</p>
+                  <p className="font-black text-orange-600 text-sm md:text-base">Bs. {item.subtotal}</p>
                 </div>
               </div>
             </div>
           )) : (
-            <div className="h-full flex flex-col items-center justify-center text-center opacity-40">
-              <div className="text-6xl mb-4">🛒</div>
+            <div className="h-full flex flex-col items-center justify-center text-center opacity-40 py-10">
+              <div className="text-5xl md:text-6xl mb-4">🛒</div>
               <p className="font-bold dark:text-white">Tu carrito está vacío</p>
             </div>
           )}
         </div>
 
-        <div className="p-8 border-t dark:border-gray-700 space-y-6">
+        <div className="p-6 md:p-8 border-t dark:border-gray-700 space-y-4 md:space-y-6 bg-white dark:bg-gray-800">
           <div className="space-y-2">
-            <div className="flex justify-between text-xs font-bold text-gray-400 uppercase tracking-widest">
+            <div className="flex justify-between text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-widest">
               <span>Subtotal</span>
               <span>Bs. {total.toFixed(2)}</span>
             </div>
             <div className="flex justify-between items-end">
-              <span className="text-lg font-black dark:text-white">TOTAL</span>
-              <span className="text-4xl font-black text-orange-600 tracking-tighter">Bs. {total.toFixed(2)}</span>
+              <span className="text-base md:text-lg font-black dark:text-white">TOTAL</span>
+              <span className="text-3xl md:text-4xl font-black text-orange-600 tracking-tighter">Bs. {total.toFixed(2)}</span>
             </div>
           </div>
 
-          <div className="flex gap-4">
-             <button onClick={handleReset} className="p-4 bg-gray-100 dark:bg-gray-700 text-gray-400 hover:text-gray-600 dark:hover:text-white rounded-2xl transition-all hover:bg-gray-200">🧹</button>
+          <div className="flex gap-3 md:gap-4">
+             <button onClick={handleReset} className="p-3 md:p-4 bg-gray-100 dark:bg-gray-700 text-gray-400 hover:text-gray-600 dark:hover:text-white rounded-2xl transition-all hover:bg-gray-200">🧹</button>
              <button 
                onClick={handleConfirmOrder}
                disabled={isProcessing || cart.length === 0}
-               className={`flex-grow bg-orange-600 text-white font-black py-4 rounded-2xl shadow-xl transition-all active:scale-95 flex items-center justify-center gap-3 ${
+               className={`flex-grow bg-orange-600 text-white font-black py-3 md:py-4 rounded-2xl shadow-xl transition-all active:scale-95 flex items-center justify-center gap-3 ${
                  isProcessing || cart.length === 0 ? 'opacity-50 cursor-not-allowed grayscale' : 'hover:bg-orange-700 hover:shadow-orange-600/50'
                }`}
              >
@@ -279,7 +279,10 @@ const OrdersSection = () => {
       {/* MODAL DE ÉXITO */}
       {isSuccessModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-white dark:bg-gray-800 rounded-[2.5rem] shadow-2xl w-full max-w-sm overflow-hidden border border-gray-100 dark:border-gray-700 p-8 text-center">
+          <div 
+            className="bg-white dark:bg-gray-800 rounded-[2.5rem] shadow-2xl w-full max-w-sm overflow-hidden border border-gray-100 dark:border-gray-700 p-8 text-center"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 text-green-600 rounded-full flex items-center justify-center text-4xl mx-auto mb-6 animate-bounce">✓</div>
             <h3 className="text-2xl font-black dark:text-white mb-2">¡Orden Confirmada!</h3>
             <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 uppercase font-bold tracking-widest">Orden #{lastOrderId}</p>

@@ -123,7 +123,7 @@ const SupplyManagementSection = () => {
         title={`Suministros de ${selectedProvider?.nombre_empresa}`}
         maxWidth="max-w-4xl"
       >
-        <div className="space-y-6">
+        <div className="space-y-4">
           <div className="relative">
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">🔍</span>
             <input 
@@ -135,7 +135,7 @@ const SupplyManagementSection = () => {
             />
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[45vh] overflow-y-auto p-2 pr-4 custom-scrollbar">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[40vh] overflow-y-auto p-2 pr-4 custom-scrollbar">
             {filteredIngredients.map(ing => {
               const isSelected = selectedIds.includes(ing.id_ingrediente);
               return (
@@ -169,7 +169,7 @@ const SupplyManagementSection = () => {
             })}
           </div>
 
-          <div className="flex gap-4 pt-6 border-t dark:border-gray-700">
+          <div className="flex gap-4 pt-4 border-t dark:border-gray-700">
             <button 
               onClick={() => setIsModalOpen(false)} 
               className="flex-grow py-4 text-gray-400 hover:text-gray-600 dark:hover:text-white font-black uppercase text-xs tracking-widest transition-colors"

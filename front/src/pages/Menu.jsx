@@ -47,25 +47,25 @@ const Menu = () => {
   }, []);
 
   return (
-    <div className="py-24 px-6 max-w-7xl mx-auto min-h-screen animate-fadeIn">
-      <div className="text-center mb-24">
-        <p className="text-orange-600 font-black text-sm uppercase tracking-[0.4em] mb-4">Experiencia Gastronómica</p>
-        <h3 className="text-6xl font-black text-gray-900 dark:text-white mb-6 tracking-tighter">Nuestra Carta</h3>
-        <div className="w-24 h-2 bg-orange-600 mx-auto rounded-full"></div>
+    <div className="py-12 md:py-24 px-4 md:px-6 max-w-7xl mx-auto min-h-screen animate-fadeIn">
+      <div className="text-center mb-16 md:mb-24">
+        <p className="text-orange-600 font-black text-xs md:text-sm uppercase tracking-[0.4em] mb-4">Experiencia Gastronómica</p>
+        <h3 className="text-4xl md:text-6xl font-black text-gray-900 dark:text-white mb-6 tracking-tighter">Nuestra Carta</h3>
+        <div className="w-16 md:w-24 h-1.5 md:h-2 bg-orange-600 mx-auto rounded-full"></div>
       </div>
       
       {loading ? (
         <div className="flex flex-col justify-center items-center h-96">
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-orange-600 border-t-transparent mb-6"></div>
-          <p className="text-gray-400 font-bold uppercase tracking-widest text-sm animate-pulse">Cargando Manjares...</p>
+          <div className="animate-spin rounded-full h-12 w-12 md:h-16 md:w-16 border-4 border-orange-600 border-t-transparent mb-6"></div>
+          <p className="text-gray-400 font-bold uppercase tracking-widest text-xs md:text-sm animate-pulse">Cargando Manjares...</p>
         </div>
       ) : error ? (
-        <div className="text-center py-20 bg-red-50 dark:bg-red-900/10 rounded-[3rem] border border-red-100 dark:border-red-900/30">
-          <p className="text-red-500 text-2xl font-black mb-2">⚠️ Error de Conexión</p>
-          <p className="text-gray-500 dark:text-gray-400">No pudimos conectar con la cocina central.</p>
+        <div className="text-center py-12 md:py-20 bg-red-50 dark:bg-red-900/10 rounded-[2rem] md:rounded-[3rem] border border-red-100 dark:border-red-900/30">
+          <p className="text-red-500 text-xl md:text-2xl font-black mb-2">⚠️ Error de Conexión</p>
+          <p className="text-gray-500 dark:text-gray-400 text-sm">No pudimos conectar con la cocina central.</p>
         </div>
       ) : (
-        <div className="grid md:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
           {dishes.map((dish) => (
             <MenuItem 
               key={dish.id_platillo}
