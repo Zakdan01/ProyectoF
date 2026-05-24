@@ -1,3 +1,4 @@
+import API_URL from '../../config/api.js';
 import React, { useState, useEffect } from 'react';
 import Modal from '../../components/Modal';
 import { useToast } from '../../context/ToastContext';
@@ -31,7 +32,7 @@ const UsersSection = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/usuarios');
+      const res = await fetch(`${API_URL}/usuarios`);
       if (!res.ok) throw new Error('Error');
       const data = await res.json();
       setUsers(Array.isArray(data) ? data : []);
@@ -45,8 +46,8 @@ const UsersSection = () => {
 
   useEffect(() => {
     fetchUsers();
-    fetch('http://localhost:5000/api/usuarios/roles').then(res => res.json()).then(setRoles);
-    fetch('http://localhost:5000/api/restaurantes').then(res => res.json()).then(setRestaurants);
+    fetch(`${API_URL}/usuarios/roles`).then(res => res.json()).then(setRoles);
+    fetch(`${API_URL}/restaurantes`).then(res => res.json()).then(setRestaurants);
   }, []);
 
   // Lógica de filtrado y ordenamiento
@@ -89,8 +90,8 @@ const UsersSection = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const url = editingUser 
-      ? `http://localhost:5000/api/usuarios/${editingUser.id_usuario}`
-      : 'http://localhost:5000/api/usuarios';
+      ? `${API_URL}/usuarios/${editingUser.id_usuario}`
+      : `${API_URL}/usuarios`;
     
     const method = editingUser ? 'PUT' : 'POST';
 
@@ -119,7 +120,7 @@ const UsersSection = () => {
   const handleDelete = async (id) => {
     if (window.confirm('¿Estás seguro de eliminar este usuario?')) {
       try {
-        const res = await fetch(`http://localhost:5000/api/usuarios/${id}`, { method: 'DELETE' });
+        const res = await fetch(`${API_URL}/usuarios/${id}`, { method: 'DELETE' });
         if (res.ok) {
           fetchUsers();
           showToast('Usuario eliminado', 'error');

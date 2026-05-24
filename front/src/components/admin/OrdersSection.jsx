@@ -1,3 +1,4 @@
+import API_URL from '../../config/api.js';
 import React, { useState, useEffect } from 'react';
 import { useAppContext } from '../../context/AppContext';
 
@@ -19,12 +20,12 @@ const OrdersSection = () => {
 
   const fetchData = async () => {
     try {
-      const pRes = await fetch('http://localhost:5000/api/platillos');
+      const pRes = await fetch(`${API_URL}/platillos`);
       const dataP = await pRes.json();
       setPlatillos(Array.isArray(dataP) ? dataP : []);
       
       if (user?.id_restaurante) {
-        const mRes = await fetch(`http://localhost:5000/api/mesas?id_restaurante=${user.id_restaurante}`);
+        const mRes = await fetch(`${API_URL}/mesas?id_restaurante=${user.id_restaurante}`);
         const dataM = await mRes.json();
         setMesas(Array.isArray(dataM) ? dataM : []);
       }
@@ -92,7 +93,7 @@ const OrdersSection = () => {
         }))
       };
 
-      const response = await fetch('http://localhost:5000/api/ordenes', {
+      const response = await fetch(`${API_URL}/ordenes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

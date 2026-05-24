@@ -1,3 +1,4 @@
+import API_URL from '../../config/api.js';
 import React, { useState, useEffect } from 'react';
 import Modal from '../../components/Modal';
 import { useToast } from '../../context/ToastContext';
@@ -21,7 +22,7 @@ const ProvidersSection = () => {
   const fetchProviders = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/proveedores');
+      const res = await fetch(`${API_URL}/proveedores`);
       if (!res.ok) throw new Error('Error');
       const data = await res.json();
       setProviders(Array.isArray(data) ? data : []);
@@ -55,8 +56,8 @@ const ProvidersSection = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const url = editingProvider 
-      ? `http://localhost:5000/api/proveedores/${editingProvider.id_proveedor}`
-      : 'http://localhost:5000/api/proveedores';
+      ? `${API_URL}/proveedores/${editingProvider.id_proveedor}`
+      : `${API_URL}/proveedores`;
     const method = editingProvider ? 'PUT' : 'POST';
 
     try {
@@ -84,7 +85,7 @@ const ProvidersSection = () => {
   const handleDelete = async (id) => {
     if (window.confirm('¿Estás seguro de eliminar este proveedor?')) {
       try {
-        const res = await fetch(`http://localhost:5000/api/proveedores/${id}`, { method: 'DELETE' });
+        const res = await fetch(`${API_URL}/proveedores/${id}`, { method: 'DELETE' });
         if (res.ok) {
           fetchProviders();
           showToast('Proveedor eliminado', 'error');

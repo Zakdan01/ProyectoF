@@ -1,3 +1,4 @@
+import API_URL from '../../config/api.js';
 import React, { useState, useEffect } from 'react';
 
 const ClientsSection = () => {
@@ -8,7 +9,7 @@ const ClientsSection = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch('http://localhost:5000/api/clientes')
+    fetch(`${API_URL}/clientes`)
       .then(res => res.json())
       .then(data => {
         setClients(Array.isArray(data) ? data : []);

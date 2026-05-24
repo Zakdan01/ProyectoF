@@ -1,3 +1,4 @@
+import API_URL from '../../config/api.js';
 import React, { useState, useEffect } from 'react';
 import Modal from '../../components/Modal';
 import { useToast } from '../../context/ToastContext';
@@ -21,7 +22,7 @@ const IngredientsSection = () => {
   const fetchIngredients = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/ingredientes');
+      const res = await fetch(`${API_URL}/ingredientes`);
       if (!res.ok) throw new Error('Error');
       const data = await res.json();
       setIngredients(Array.isArray(data) ? data : []);
@@ -55,8 +56,8 @@ const IngredientsSection = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const url = editingIngredient 
-      ? `http://localhost:5000/api/ingredientes/${editingIngredient.id_ingrediente}`
-      : 'http://localhost:5000/api/ingredientes';
+      ? `${API_URL}/ingredientes/${editingIngredient.id_ingrediente}`
+      : `${API_URL}/ingredientes`;
     const method = editingIngredient ? 'PUT' : 'POST';
 
     try {
@@ -84,7 +85,7 @@ const IngredientsSection = () => {
   const handleDelete = async (id) => {
     if (window.confirm('¿Estás seguro de eliminar este ingrediente?')) {
       try {
-        const res = await fetch(`http://localhost:5000/api/ingredientes/${id}`, { method: 'DELETE' });
+        const res = await fetch(`${API_URL}/ingredientes/${id}`, { method: 'DELETE' });
         if (res.ok) {
           fetchIngredients();
           showToast('Ingrediente eliminado', 'error');
@@ -101,7 +102,7 @@ const IngredientsSection = () => {
   const handleUpdateStatus = async (id, newStatus) => {
     try {
       const ingredientToUpdate = ingredients.find(i => i.id_ingrediente === id);
-      const res = await fetch(`http://localhost:5000/api/ingredientes/${id}`, {
+      const res = await fetch(`${API_URL}/ingredientes/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...ingredientToUpdate, estado: newStatus })

@@ -1,3 +1,4 @@
+import API_URL from '../../config/api.js';
 import React, { useState, useEffect } from 'react';
 import Modal from '../../components/Modal';
 
@@ -10,7 +11,7 @@ const AuditSection = () => {
 
   const fetchLogs = () => {
     setLoading(true);
-    fetch(`http://localhost:5000/api/audit/${table}`)
+    fetch(`${API_URL}/audit/${table}`)
       .then(res => res.json())
       .then(data => {
         setLogs(Array.isArray(data) ? data : []);

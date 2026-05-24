@@ -1,3 +1,4 @@
+import API_URL from '../../config/api.js';
 import React, { useState, useEffect } from 'react';
 
 const StatsSection = () => {
@@ -10,8 +11,8 @@ const StatsSection = () => {
     setLoading(true);
     try {
       const [pRes, dRes] = await Promise.all([
-        fetch('http://localhost:5000/api/reportes/popularidad'),
-        fetch('http://localhost:5000/api/reportes/desglose')
+        fetch(`${API_URL}/reportes/popularidad`),
+        fetch(`${API_URL}/reportes/desglose`)
       ]);
       const dataP = await pRes.json();
       const dataD = await dRes.json();

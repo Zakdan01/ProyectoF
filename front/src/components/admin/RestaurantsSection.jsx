@@ -1,3 +1,4 @@
+import API_URL from '../../config/api.js';
 import React, { useState, useEffect } from 'react';
 import Modal from '../../components/Modal';
 import { useToast } from '../../context/ToastContext';
@@ -25,7 +26,7 @@ const RestaurantsSection = () => {
   const fetchRestaurantes = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/restaurantes');
+      const res = await fetch(`${API_URL}/restaurantes`);
       if (!res.ok) throw new Error('Error');
       const data = await res.json();
       setRestaurantes(Array.isArray(data) ? data : []);
@@ -43,7 +44,7 @@ const RestaurantsSection = () => {
   const handleViewStaff = async (res) => {
     setSelectedRestName(res.nombre);
     try {
-      const response = await fetch(`http://localhost:5000/api/usuarios?id_restaurante=${res.id_restaurante}`);
+      const response = await fetch(`${API_URL}/usuarios?id_restaurante=${res.id_restaurante}`);
       const data = await response.json();
       setStaff(data.filter(u => Number(u.id_restaurante) === Number(res.id_restaurante)));
       setIsStaffModalOpen(true);
@@ -69,8 +70,8 @@ const RestaurantsSection = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const url = editingRestaurant 
-      ? `http://localhost:5000/api/restaurantes/${editingRestaurant.id_restaurante}`
-      : 'http://localhost:5000/api/restaurantes';
+      ? `${API_URL}/restaurantes/${editingRestaurant.id_restaurante}`
+      : `${API_URL}/restaurantes`;
     const method = editingRestaurant ? 'PUT' : 'POST';
 
     try {
@@ -98,7 +99,7 @@ const RestaurantsSection = () => {
   const handleDelete = async (id) => {
     if (window.confirm('¿Estás seguro de eliminar esta sucursal?')) {
       try {
-        const res = await fetch(`http://localhost:5000/api/restaurantes/${id}`, { method: 'DELETE' });
+        const res = await fetch(`${API_URL}/restaurantes/${id}`, { method: 'DELETE' });
         if (res.ok) {
           fetchRestaurantes();
           showToast('Sucursal eliminada', 'error');

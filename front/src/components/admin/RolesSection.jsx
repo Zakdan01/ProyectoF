@@ -1,3 +1,4 @@
+import API_URL from '../../config/api.js';
 import React, { useState, useEffect } from 'react';
 import Modal from '../../components/Modal';
 import { useToast } from '../../context/ToastContext';
@@ -12,7 +13,7 @@ const RolesSection = () => {
   const fetchRoles = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/roles');
+      const res = await fetch(`${API_URL}/roles`);
       if (!res.ok) throw new Error('Error al cargar');
       const data = await res.json();
       setRoles(Array.isArray(data) ? data : []);
@@ -37,7 +38,7 @@ const RolesSection = () => {
     };
 
     try {
-      const res = await fetch('http://localhost:5000/api/roles', {
+      const res = await fetch(`${API_URL}/roles`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -61,7 +62,7 @@ const RolesSection = () => {
   const handleDelete = async (id) => {
     if (window.confirm('¿Estás seguro de eliminar este rol?')) {
       try {
-        const res = await fetch(`http://localhost:5000/api/roles/${id}`, { method: 'DELETE' });
+        const res = await fetch(`${API_URL}/roles/${id}`, { method: 'DELETE' });
         if (res.ok) {
           fetchRoles();
           showToast('Rol eliminado correctamente', 'error');

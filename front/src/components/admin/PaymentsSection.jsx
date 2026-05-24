@@ -1,3 +1,4 @@
+import API_URL from '../../config/api.js';
 import React, { useState, useEffect } from 'react';
 
 const PaymentsSection = () => {
@@ -6,7 +7,7 @@ const PaymentsSection = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch('http://localhost:5000/api/pagos')
+    fetch(`${API_URL}/pagos`)
       .then(res => res.json())
       .then(data => {
         setPayments(Array.isArray(data) ? data : []);

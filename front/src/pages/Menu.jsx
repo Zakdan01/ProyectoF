@@ -1,3 +1,4 @@
+import API_URL from '../config/api.js';
 import React, { useState, useEffect } from 'react';
 
 const MenuItem = ({ name, price, desc, img }) => (
@@ -27,7 +28,7 @@ const Menu = () => {
       try {
         setLoading(true);
         // Llamada real al backend
-        const response = await fetch('http://localhost:5000/api/platillos');
+        const response = await fetch(`${API_URL}/platillos`);
         
         if (!response.ok) {
           throw new Error('No se pudo obtener el menú del servidor');

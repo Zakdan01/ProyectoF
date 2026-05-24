@@ -1,3 +1,4 @@
+import API_URL from '../../config/api.js';
 import React, { useState, useEffect } from 'react';
 import Modal from '../Modal';
 import { useToast } from '../../context/ToastContext';
@@ -11,7 +12,7 @@ const KitchenSection = () => {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/ordenes/preparacion');
+      const res = await fetch(`${API_URL}/ordenes/preparacion`);
       if (!res.ok) throw new Error('Error');
       const data = await res.json();
       setOrders(Array.isArray(data) ? data : []);
@@ -32,7 +33,7 @@ const KitchenSection = () => {
   const handleComplete = async () => {
     if (!orderToConfirm) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/ordenes/${orderToConfirm.id_orden}/estado`, {
+      const res = await fetch(`${API_URL}/ordenes/${orderToConfirm.id_orden}/estado`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ estado: 'Listo para entrega' })

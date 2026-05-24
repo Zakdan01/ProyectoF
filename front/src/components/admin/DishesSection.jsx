@@ -1,3 +1,4 @@
+import API_URL from '../../config/api.js';
 import React, { useState, useEffect } from 'react';
 import Modal from '../../components/Modal';
 import { useAppContext } from '../../context/AppContext';
@@ -22,7 +23,7 @@ const DishesSection = () => {
   const fetchDishes = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/platillos');
+      const res = await fetch(`${API_URL}/platillos`);
       if (!res.ok) throw new Error('Error');
       const data = await res.json();
       setDishes(Array.isArray(data) ? data : []);
@@ -52,8 +53,8 @@ const DishesSection = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const url = editingDish 
-      ? `http://localhost:5000/api/platillos/${editingDish.id_platillo}`
-      : 'http://localhost:5000/api/platillos';
+      ? `${API_URL}/platillos/${editingDish.id_platillo}`
+      : `${API_URL}/platillos`;
     const method = editingDish ? 'PUT' : 'POST';
 
     try {
@@ -81,7 +82,7 @@ const DishesSection = () => {
   const handleDelete = async (id) => {
     if (window.confirm('¿Estás seguro de eliminar este platillo?')) {
       try {
-        const res = await fetch(`http://localhost:5000/api/platillos/${id}`, {
+        const res = await fetch(`${API_URL}/platillos/${id}`, {
           method: 'DELETE'
         });
         if (res.ok) {

@@ -1,3 +1,4 @@
+import API_URL from '../config/api.js';
 import React, { useState, useEffect } from 'react';
 import { useAppContext } from '../context/AppContext';
 import Modal from '../components/Modal';
@@ -32,7 +33,7 @@ const Profile = () => {
       if (!user?.id_usuario) return;
       setLoading(true);
       try {
-        const res = await fetch(`http://localhost:5000/api/usuarios`);
+        const res = await fetch(`${API_URL}/usuarios`);
         const allUsers = await res.json();
         // Buscamos nuestra propia info detallada
         const me = allUsers.find(u => u.id_usuario === user.id_usuario);
@@ -79,7 +80,7 @@ const Profile = () => {
     setMessage({ type: '', text: '' });
 
     try {
-      const res = await fetch(`http://localhost:5000/api/usuarios/${user.id_usuario}`, {
+      const res = await fetch(`${API_URL}/usuarios/${user.id_usuario}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -342,7 +343,7 @@ const Profile = () => {
 
           setLoading(true);
           try {
-            const res = await fetch(`http://localhost:5000/api/usuarios/${user.id_usuario}/password`, {
+            const res = await fetch(`${API_URL}/usuarios/${user.id_usuario}/password`, {
               method: 'PUT',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({

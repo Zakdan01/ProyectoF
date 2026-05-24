@@ -1,3 +1,4 @@
+import API_URL from '../../config/api.js';
 import React, { useState, useEffect } from 'react';
 import Modal from '../../components/Modal';
 import { useToast } from '../../context/ToastContext';
@@ -16,8 +17,8 @@ const SupplyManagementSection = () => {
     setLoading(true);
     try {
       const [mRes, iRes] = await Promise.all([
-        fetch('http://localhost:5000/api/suministros'),
-        fetch('http://localhost:5000/api/ingredientes')
+        fetch(`${API_URL}/suministros`),
+        fetch(`${API_URL}/ingredientes`)
       ]);
       const dataM = await mRes.json();
       const dataI = await iRes.json();
@@ -49,7 +50,7 @@ const SupplyManagementSection = () => {
 
   const handleSave = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/suministros/${selectedProvider.id_proveedor}`, {
+      const res = await fetch(`${API_URL}/suministros/${selectedProvider.id_proveedor}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ingredientes_ids: selectedIds })

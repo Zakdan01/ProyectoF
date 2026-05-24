@@ -1,3 +1,4 @@
+import API_URL from '../../config/api.js';
 import React, { useState, useEffect } from 'react';
 import Modal from '../../components/Modal';
 import { useAppContext } from '../../context/AppContext';
@@ -22,8 +23,8 @@ const TablesSection = () => {
   const fetchTables = async (id_restaurante = '') => {
     setLoading(true);
     const url = id_restaurante 
-      ? `http://localhost:5000/api/mesas?id_restaurante=${id_restaurante}`
-      : 'http://localhost:5000/api/mesas';
+      ? `${API_URL}/mesas?id_restaurante=${id_restaurante}`
+      : `${API_URL}/mesas`;
     
     try {
       const res = await fetch(url);
@@ -39,7 +40,7 @@ const TablesSection = () => {
   };
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/restaurantes')
+    fetch(`${API_URL}/restaurantes`)
       .then(res => res.json())
       .then(setRestaurants);
     
@@ -63,7 +64,7 @@ const TablesSection = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:5000/api/mesas', {
+      const res = await fetch(`${API_URL}/mesas`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
@@ -85,7 +86,7 @@ const TablesSection = () => {
   const handleUpdateStatus = async (id, newStatus) => {
     try {
       const tableToUpdate = tables.find(t => t.id_mesa === id);
-      const res = await fetch(`http://localhost:5000/api/mesas/${id}`, {
+      const res = await fetch(`${API_URL}/mesas/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...tableToUpdate, estado: newStatus })
@@ -105,7 +106,7 @@ const TablesSection = () => {
   const handleDelete = async (id) => {
     if (window.confirm('¿Estás seguro de eliminar esta mesa?')) {
       try {
-        const res = await fetch(`http://localhost:5000/api/mesas/${id}`, { method: 'DELETE' });
+        const res = await fetch(`${API_URL}/mesas/${id}`, { method: 'DELETE' });
         if (res.ok) {
           fetchTables(selectedRestaurante);
           showToast('Mesa eliminada', 'error');

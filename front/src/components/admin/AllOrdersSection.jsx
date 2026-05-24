@@ -1,3 +1,4 @@
+import API_URL from '../../config/api.js';
 import React, { useState, useEffect } from 'react';
 
 const AllOrdersSection = () => {
@@ -11,7 +12,7 @@ const AllOrdersSection = () => {
   const fetchOrders = async () => {
     setLoading(true);
     setError(null);
-    let url = 'http://localhost:5000/api/ordenes';
+    let url = `${API_URL}/ordenes`;
     const params = [];
     if (selectedRest) params.push(`id_restaurante=${selectedRest}`);
     if (selectedFecha) params.push(`fecha=${selectedFecha}`);
@@ -33,7 +34,7 @@ const AllOrdersSection = () => {
 
   useEffect(() => {
     fetchOrders();
-    fetch('http://localhost:5000/api/restaurantes')
+    fetch(`${API_URL}/restaurantes`)
       .then(res => res.json())
       .then(setRestaurants)
       .catch(() => setRestaurants([]));

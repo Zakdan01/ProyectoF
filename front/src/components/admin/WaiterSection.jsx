@@ -1,3 +1,4 @@
+import API_URL from '../../config/api.js';
 import React, { useState, useEffect } from 'react';
 import { useAppContext } from '../../context/AppContext';
 import { useToast } from '../../context/ToastContext';
@@ -13,7 +14,7 @@ const WaiterSection = () => {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/ordenes/listas');
+      const res = await fetch(`${API_URL}/ordenes/listas`);
       if (!res.ok) throw new Error('Error');
       const data = await res.json();
       setOrders(Array.isArray(data) ? data : []);
@@ -35,7 +36,7 @@ const WaiterSection = () => {
     if (!user || !orderToConfirm) return alert("Debes estar logueado para entregar órdenes");
     
     try {
-      const res = await fetch(`http://localhost:5000/api/ordenes/${orderToConfirm.id_orden}/estado`, {
+      const res = await fetch(`${API_URL}/ordenes/${orderToConfirm.id_orden}/estado`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
